@@ -1,1 +1,3 @@
-from .regs import bit, write_protection
+from .regs import bit
+from .regs import register
+from .regs import map
