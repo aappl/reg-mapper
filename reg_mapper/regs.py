@@ -1,4 +1,5 @@
 from pathlib import Path
+from reg_mapper import vhdl_mapper
 
 
 VALID_WRITE_PROTECTION = ["READ_WRITE", "READ_ONLY"]
@@ -35,10 +36,11 @@ class map():
     Class representing a map of registers.
     """
     def __init__(self, name=None, width=32, length=10):
-        self._name = name
+        self.name = name
         self._width = width
         self._length = length
-        self._registers = []
+        self._address_count = 0
+        self.registers = []
         self.output_dir = Path("register_maps")
 
     def add_register(self, name, rw):
@@ -46,7 +48,8 @@ class map():
         Create and add a new register to the map.
         """
         if rw in VALID_WRITE_PROTECTION:
-            self._registers.append(register(name, width=self._width))
+            self.registers.append(register(name, width=self._width, address_offset=self._address_count))
+            self._address_count += 1
         else:
             raise ValueError("{} is not a valid input, valid inputs are {}".format(rw, VALID_WRITE_PROTECTION))
 
@@ -68,13 +71,17 @@ class map():
         """
         Create the output register map files
         """
+        # Check that the imput list values are all valid
         if set(output_types).issubset(VALID_OUTPUT_TYPES):
+            # For every requested output type, create the output file
             for output_type in output_types:
                 if output_type == "vhdl":
-                    raise NotImplementedError()
+                    vhdl_mapper.create(self)
                 if output_type == "verilog":
                     raise NotImplementedError()
                 if output_type == "c":
                     raise NotImplementedError()
                 if output_type == "html":
                     raise NotImplementedError()
+        else:
+            raise ValueError("Input for output file types is invalid")

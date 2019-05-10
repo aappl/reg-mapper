@@ -1,21 +1,23 @@
 from context import reg_mapper
+from reg_mapper import regs
+
 from pathlib import Path
 import pytest
 
 def test_bit():
-    reg = reg_mapper.bit("new_bit")
+    reg = regs.bit("new_bit")
 
     assert reg.name == "new_bit"
 
 
 def test_register():
     # Create 8 bit register
-    reg = reg_mapper.register("my_reg", 8)
+    reg = regs.register("my_reg", 8)
 
 
 def test_map(tmpdir):
     # Create a new map object with a name and a size
-    register_map = reg_mapper.map("system", 8)
+    register_map = regs.map("system", 8)
 
     # Create the map by adding registers
     register_map.add_register("Temperature", "READ_ONLY")
@@ -34,12 +36,12 @@ def test_map(tmpdir):
 def test_add_register_exception():
     """Test that a value error is raised when an incorrect value is given for the rw parameter."""
     with pytest.raises(ValueError):
-        map = reg_mapper.map()
+        map = regs.map()
         map.add_register("test_reg", "Not_Exist")
 
 
 def test_output_dir():
-    reg_map = reg_mapper.map("new_map", 8)
+    reg_map = regs.map("new_map", 8)
 
     assert reg_map.output_dir == Path("register_maps")
 
