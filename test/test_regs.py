@@ -15,10 +15,11 @@ def test_bit():
     """
     Test that a bit can be created.
     """
-    new_bit = regs.Bit()
+    new_bit = regs.Bit(0)
     new_bit.name = "new_bit"
 
     assert new_bit.name == "new_bit"
+    assert new_bit.number == 0
 
 
 def test_register():

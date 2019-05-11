@@ -16,11 +16,20 @@ def create_vhdl(map):
     output_vhdl += vhdl_package_header(map)
 
     # Add registers and their addresses
+    registers_vhdl = ""
+    bits_vhdl = ""
     for key, reg in map.registers.items():
-        output_vhdl += vhdl_register_address(reg)
+        registers_vhdl += vhdl_register_address(reg)
+        for bit in reg.bits:
+            if bit.name != None:
+                bits_vhdl += vhdl_bit_name(bit)
+
+    output_vhdl += registers_vhdl
+    output_vhdl += bits_vhdl
 
     output_vhdl += vhdl_package_footer(map)
 
+    print(output_vhdl)
     return output_vhdl
 
 
@@ -44,3 +53,11 @@ def vhdl_register_address(reg):
     register.
     """
     return "constant {} : integer := {};\n".format(reg.name, reg.address_offset)
+
+
+def vhdl_bit_name(bit):
+    """
+    Returns a string with a VHDL constant delaration of a bit name and it's
+    associted number.
+    """
+    return "constant {} : integer := {};\n".format(bit.name, bit.number)

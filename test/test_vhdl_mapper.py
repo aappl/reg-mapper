@@ -24,6 +24,9 @@ def test_create_vhdl(tmpdir):
     register_map.add_register("Gyro2",       "READ_ONLY")
     register_map.add_register("LEDs",        "READ_WRITE")
 
+    register_map.set_bit_name("LEDs", 0, "Running")
+    register_map.set_bit_name("LEDs", 1, "Error")
+
     # Tell the program where to output the files
     register_map.output_dir = Path(tmpdir) / "maps"
 
@@ -36,5 +39,7 @@ constant Humidity : integer := 1;
 constant Gyro1 : integer := 2;
 constant Gyro2 : integer := 3;
 constant LEDs : integer := 4;
+constant Running : integer := 0;
+constant Error : integer := 1;
 end package system;
 """

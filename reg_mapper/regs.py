@@ -18,8 +18,9 @@ class Bit():
     """
     Class representing one bit in a register.
     """
-    def __init__(self):
+    def __init__(self, number):
         self.name = None
+        self.number = number
 
 
 class Register():
@@ -31,7 +32,7 @@ class Register():
         self.width = width
         if width:
             # Create empty set of bits
-            self.bits = [Bit() for i in range(width)]
+            self.bits = [Bit(i) for i in range(width)]
         else:
             self.bits = None
 
