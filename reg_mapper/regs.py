@@ -76,7 +76,7 @@ class map():
             # For every requested output type, create the output file
             for output_type in output_types:
                 if output_type == "vhdl":
-                    vhdl_mapper.create(self)
+                    vhdl_mapper.create_vhdl(self)
                 if output_type == "verilog":
                     raise NotImplementedError()
                 if output_type == "c":

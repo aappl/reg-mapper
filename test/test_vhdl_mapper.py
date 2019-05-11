@@ -5,7 +5,7 @@ from reg_mapper import vhdl_mapper
 from pathlib import Path
 
 
-def test_create(tmpdir):
+def test_create_vhdl(tmpdir):
     # Create a new map object with a name and a size
     register_map = regs.map("system", 8)
 
@@ -19,6 +19,14 @@ def test_create(tmpdir):
     # Tell the program where to output the files
     register_map.output_dir = Path(tmpdir) / "maps"
 
-    vhdl_mapper.create(register_map)
+    output_vhdl = vhdl_mapper.create_vhdl(register_map)
 
-    assert 0
+    assert output_vhdl == """\
+package system is
+constant Temperature : integer := 0;
+constant Humidity : integer := 1;
+constant Gyro1 : integer := 2;
+constant Gyro2 : integer := 3;
+constant LEDs : integer := 4;
+end package system;
+"""
