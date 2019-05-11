@@ -16,7 +16,7 @@ def create_vhdl(map):
     output_vhdl += vhdl_package_header(map)
 
     # Add registers and their addresses
-    for reg in map.registers:
+    for key, reg in map.registers.items():
         output_vhdl += vhdl_register_address(reg)
 
     output_vhdl += vhdl_package_footer(map)

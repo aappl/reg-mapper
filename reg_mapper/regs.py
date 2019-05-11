@@ -18,8 +18,8 @@ class bit():
     """
     Class representing one bit in a register.
     """
-    def __init__(self, name=None):
-        self.name = name
+    def __init__(self):
+        self.name = None
 
 
 class register():
@@ -47,7 +47,7 @@ class map():
         self.name = name
         self._width = width
         self._address_count = 0
-        self.registers = []
+        self.registers = {}
         self.output_dir = Path("register_maps")
 
     def add_register(self, name, rw):
@@ -55,7 +55,7 @@ class map():
         Create and add a new register to the map.
         """
         if rw in VALID_WRITE_PROTECTION:
-            self.registers.append(register(name, width=self._width, address_offset=self._address_count))
+            self.registers[name] = register(name, width=self._width, address_offset=self._address_count)
             self._address_count += 1
         else:
             raise ValueError("{} is not a valid input, valid inputs are {}".format(rw, VALID_WRITE_PROTECTION))

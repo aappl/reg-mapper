@@ -15,9 +15,10 @@ def test_bit():
     """
     Test that a bit can be created.
     """
-    reg = regs.bit("new_bit")
+    new_bit = regs.bit()
+    new_bit.name = "new_bit"
 
-    assert reg.name == "new_bit"
+    assert new_bit.name == "new_bit"
 
 
 def test_register():
@@ -42,17 +43,24 @@ def test_map(tmpdir):
     register_map.add_register("Gyro2",       "READ_ONLY")
     register_map.add_register("LEDs",        "READ_WRITE")
 
-    assert register_map.registers[0].name == "Temperature"
-    assert register_map.registers[1].name == "Humidity"
-    assert register_map.registers[2].name == "Gyro1"
-    assert register_map.registers[3].name == "Gyro2"
-    assert register_map.registers[4].name == "LEDs"
+    register_map.registers["LEDs"].bits[0].name = "Running"
+    register_map.registers["LEDs"].bits[1].name = "Error"
 
-    assert register_map.registers[0].width == 8
-    assert register_map.registers[1].width == 8
-    assert register_map.registers[2].width == 8
-    assert register_map.registers[3].width == 8
-    assert register_map.registers[4].width == 8
+    # Check values are added correctly
+    assert register_map.registers["Temperature"].name == "Temperature"
+    assert register_map.registers["Humidity"].name == "Humidity"
+    assert register_map.registers["Gyro1"].name == "Gyro1"
+    assert register_map.registers["Gyro2"].name == "Gyro2"
+    assert register_map.registers["LEDs"].name == "LEDs"
+
+    assert register_map.registers["Temperature"].width == 8
+    assert register_map.registers["Humidity"].width == 8
+    assert register_map.registers["Gyro1"].width == 8
+    assert register_map.registers["Gyro2"].width == 8
+    assert register_map.registers["LEDs"].width == 8
+
+    assert register_map.registers["LEDs"].bits[0].name == "Running"
+    assert register_map.registers["LEDs"].bits[1].name == "Error"
 
 
 def test_add_register_exception():
