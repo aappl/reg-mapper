@@ -62,6 +62,10 @@ class Map():
             raise ValueError("{} is not a valid input, valid inputs are {}".format(rw, VALID_WRITE_PROTECTION))
 
 
+    def set_bit_name(self, reg_name, bit_number, bit_name):
+        self.registers[reg_name].bits[bit_number].name = bit_name
+
+
     @property
     def output_dir(self):
         """

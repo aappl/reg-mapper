@@ -43,8 +43,8 @@ def test_map(tmpdir):
     register_map.add_register("Gyro2",       "READ_ONLY")
     register_map.add_register("LEDs",        "READ_WRITE")
 
-    register_map.registers["LEDs"].bits[0].name = "Running"
-    register_map.registers["LEDs"].bits[1].name = "Error"
+    register_map.set_bit_name("LEDs", 0, "Running")
+    register_map.set_bit_name("LEDs", 1, "Error")
 
     # Check values are added correctly
     assert register_map.registers["Temperature"].name == "Temperature"
