@@ -1,3 +1,10 @@
+"""
+vhdl_mapper
+This module takes a generic map object and creates the VHDL text representing
+a register map i.e. a set of constants allowing the user to access a register
+map using named addresses.
+"""
+
 
 def create_vhdl(map):
     """

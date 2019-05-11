@@ -1,11 +1,19 @@
+"""
+test_vhdl_mapper
+Test file for the vhdl_mapper module.
+"""
+
+from pathlib import Path
+
 from context import reg_mapper
 from reg_mapper import regs
 from reg_mapper import vhdl_mapper
 
-from pathlib import Path
-
 
 def test_create_vhdl(tmpdir):
+    """
+    Test that the created VHDL text is correct.
+    """
     # Create a new map object with a name and a size
     register_map = regs.map("system", 8)
 

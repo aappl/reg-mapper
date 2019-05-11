@@ -1,4 +1,12 @@
+"""
+regs
+The regs module contains classes describing the elements of a register map.
+For example, a register class defining a name and address offset, or a bit
+class representing a single bit in a register with a name.
+"""
+
 from pathlib import Path
+
 from reg_mapper import vhdl_mapper
 
 
@@ -35,10 +43,9 @@ class map():
     """
     Class representing a map of registers.
     """
-    def __init__(self, name=None, width=32, length=10):
+    def __init__(self, name=None, width=32):
         self.name = name
         self._width = width
-        self._length = length
         self._address_count = 0
         self.registers = []
         self.output_dir = Path("register_maps")
