@@ -15,7 +15,7 @@ def test_bit():
     """
     Test that a bit can be created.
     """
-    new_bit = regs.bit()
+    new_bit = regs.Bit()
     new_bit.name = "new_bit"
 
     assert new_bit.name == "new_bit"
@@ -26,7 +26,7 @@ def test_register():
     Test that a register can be created.
     """
     # Create 8 bit register
-    reg = regs.register("my_reg", 8)
+    reg = regs.Register("my_reg", 8)
 
 
 def test_map(tmpdir):
@@ -34,7 +34,7 @@ def test_map(tmpdir):
     Test that a map object can be created.
     """
     # Create a new map object with a name and a size
-    register_map = regs.map("system", 8)
+    register_map = regs.Map("system", 8)
 
     # Create the map by adding registers
     register_map.add_register("Temperature", "READ_ONLY")
@@ -66,7 +66,7 @@ def test_map(tmpdir):
 def test_add_register_exception():
     """Test that a value error is raised when an incorrect value is given for the rw parameter."""
     with pytest.raises(ValueError):
-        map = regs.map()
+        map = regs.Map()
         map.add_register("test_reg", "Not_Exist")
 
 
@@ -74,7 +74,7 @@ def test_output_dir():
     """
     Test that the output directory can be set properly and changed.
     """
-    reg_map = regs.map("new_map", 8)
+    reg_map = regs.Map("new_map", 8)
 
     assert reg_map.output_dir == Path("register_maps")
 

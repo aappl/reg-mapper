@@ -14,7 +14,7 @@ VALID_WRITE_PROTECTION = ["READ_WRITE", "READ_ONLY"]
 VALID_OUTPUT_TYPES     = ["vhdl", "verilog", "c", "html"]
 
 
-class bit():
+class Bit():
     """
     Class representing one bit in a register.
     """
@@ -22,7 +22,7 @@ class bit():
         self.name = None
 
 
-class register():
+class Register():
     """
     Class representing a register of bits.
     """
@@ -31,7 +31,7 @@ class register():
         self.width = width
         if width:
             # Create empty set of bits
-            self.bits = [bit() for i in range(width)]
+            self.bits = [Bit() for i in range(width)]
         else:
             self.bits = None
 
@@ -39,7 +39,7 @@ class register():
         self.address_offset = address_offset
 
 
-class map():
+class Map():
     """
     Class representing a map of registers.
     """
@@ -50,15 +50,17 @@ class map():
         self.registers = {}
         self.output_dir = Path("register_maps")
 
+
     def add_register(self, name, rw):
         """
         Create and add a new register to the map.
         """
         if rw in VALID_WRITE_PROTECTION:
-            self.registers[name] = register(name, width=self._width, address_offset=self._address_count)
+            self.registers[name] = Register(name, width=self._width, address_offset=self._address_count)
             self._address_count += 1
         else:
             raise ValueError("{} is not a valid input, valid inputs are {}".format(rw, VALID_WRITE_PROTECTION))
+
 
     @property
     def output_dir(self):
@@ -67,12 +69,14 @@ class map():
         """
         return self.__output_dir
 
+
     @output_dir.setter
     def output_dir(self, output_dir):
         """
         Setter for output directory ensures the input gets converted to a Path type before being stored.
         """
         self.__output_dir = Path(output_dir)
+
 
     def create(self, output_types):
         """
