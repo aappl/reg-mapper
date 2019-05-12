@@ -53,6 +53,7 @@ class Map():
         self._address_count = 0
         self.registers = {}
         self.output_dir = Path("register_maps")
+        self.base_address = None
 
     def add_register(self, name, rw):
         """

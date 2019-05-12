@@ -90,3 +90,14 @@ def test_output_dir():
 
     reg_map.output_dir = "new_dir"
     assert reg_map.output_dir == Path("new_dir")
+
+
+def test_base_address():
+    """
+    Test that the base address can be added correctly to the map
+    object.
+    """
+    reg_map = regs.Map("new_map", 32)
+    reg_map.base_address = 16
+
+    assert reg_map.base_address == 16
