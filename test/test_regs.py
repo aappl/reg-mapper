@@ -71,7 +71,10 @@ def test_map(tmpdir):
 
 
 def test_add_register_exception():
-    """Test that a value error is raised when an incorrect value is given for the rw parameter."""
+    """
+    Test that a value error is raised when an incorrect value is
+    given for the rw parameter.
+    """
     with pytest.raises(ValueError):
         map = regs.Map()
         map.add_register("test_reg", "Not_Exist")

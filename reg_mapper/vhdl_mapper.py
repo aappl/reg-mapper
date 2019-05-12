@@ -21,7 +21,7 @@ def create_vhdl(map):
     for key, reg in map.registers.items():
         registers_vhdl += vhdl_register_address(reg)
         for bit in reg.bits:
-            if bit.name != None:
+            if bit.name is not None:
                 bits_vhdl += vhdl_bit_name(bit)
 
     output_vhdl += registers_vhdl
@@ -52,7 +52,8 @@ def vhdl_register_address(reg):
     Return a string with a VHDL constant declaration of the supplied
     register.
     """
-    return "constant {} : integer := {};\n".format(reg.name, reg.address_offset)
+    return "constant {} : integer := {};\n".format(reg.name,
+                                                   reg.address_offset)
 
 
 def vhdl_bit_name(bit):
