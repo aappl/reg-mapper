@@ -12,6 +12,7 @@ from reg_mapper import vhdl_mapper
 
 VALID_WRITE_PROTECTION = ["READ_WRITE", "READ_ONLY"]
 VALID_OUTPUT_TYPES = ["vhdl", "verilog", "c", "html"]
+VALID_WIDTHS = [8, 16, 32, 64, 128, 256, 512, 1048]
 
 
 class Bit():
@@ -31,8 +32,8 @@ class Register():
 
     def __init__(self, name=None, width=None, rw=None, address_offset=None):
         self.name = name
-        self.width = width
-        if width:
+        self._width = width
+        if self._width:
             # Create empty set of bits
             self.bits = [Bit(i) for i in range(width)]
         else:
@@ -50,6 +51,11 @@ class Map():
     def __init__(self, name=None, width=32):
         self.name = name
         self._width = width
+        # Check width is allowed
+        if self._width not in VALID_WIDTHS:
+            raise ValueError("Width value not allowed {},\
+                              valid values are {}".format(self._width,
+                                                          VALID_WIDTHS))
         self._address_count = 0
         self.registers = {}
         self.output_dir = Path("register_maps")

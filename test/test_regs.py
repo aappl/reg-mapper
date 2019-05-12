@@ -33,7 +33,7 @@ def test_register():
     reg = regs.Register(name, width)
 
     assert reg.name == name
-    assert reg.width == width
+    assert reg._width == width
 
 
 def test_map(tmpdir):
@@ -60,11 +60,11 @@ def test_map(tmpdir):
     assert register_map.registers["Gyro2"].name == "Gyro2"
     assert register_map.registers["LEDs"].name == "LEDs"
 
-    assert register_map.registers["Temperature"].width == 8
-    assert register_map.registers["Humidity"].width == 8
-    assert register_map.registers["Gyro1"].width == 8
-    assert register_map.registers["Gyro2"].width == 8
-    assert register_map.registers["LEDs"].width == 8
+    assert register_map.registers["Temperature"]._width == 8
+    assert register_map.registers["Humidity"]._width == 8
+    assert register_map.registers["Gyro1"]._width == 8
+    assert register_map.registers["Gyro2"]._width == 8
+    assert register_map.registers["LEDs"]._width == 8
 
     assert register_map.registers["LEDs"].bits[0].name == "Running"
     assert register_map.registers["LEDs"].bits[1].name == "Error"
@@ -101,3 +101,11 @@ def test_base_address():
     reg_map.base_address = 16
 
     assert reg_map.base_address == 16
+
+
+def test_width_checking():
+    """
+    Test that the widths of the registers are checked properly.
+    """
+    with pytest.raises(ValueError):
+        reg_map = regs.Map(width=20)
