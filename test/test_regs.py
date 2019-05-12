@@ -26,8 +26,14 @@ def test_register():
     """
     Test that a register can be created.
     """
+    name = "my_reg"
+    width = 8
+
     # Create 8 bit register
-    reg = regs.Register("my_reg", 8)
+    reg = regs.Register(name, width)
+
+    assert reg.name == name
+    assert reg.width == width
 
 
 def test_map(tmpdir):
