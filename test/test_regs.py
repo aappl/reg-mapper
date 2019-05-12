@@ -109,3 +109,30 @@ def test_width_checking():
     """
     with pytest.raises(ValueError):
         reg_map = regs.Map(width=20)
+
+
+def test_set_addresses(tmpdir):
+    """
+    Test that the addresses are set correctly.
+    """
+    # Create a new map object with a name and a size
+    register_map = regs.Map("system", 32)
+
+    # Create the map by adding registers
+    register_map.add_register("Temperature", "READ_ONLY")
+    register_map.add_register("Humidity",    "READ_ONLY")
+    register_map.add_register("Gyro1",       "READ_ONLY")
+    register_map.add_register("Gyro2",       "READ_ONLY")
+    register_map.add_register("LEDs",        "READ_WRITE")
+
+    register_map.set_bit_name("LEDs", 0, "Running")
+    register_map.set_bit_name("LEDs", 1, "Error")
+
+    register_map._set_addresses()
+
+    # Check addresses are added correctly
+    assert register_map.registers["Temperature"].address_offset == 0
+    assert register_map.registers["Humidity"].address_offset == 4
+    assert register_map.registers["Gyro1"].address_offset == 8
+    assert register_map.registers["Gyro2"].address_offset == 12
+    assert register_map.registers["LEDs"].address_offset == 16

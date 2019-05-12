@@ -30,7 +30,7 @@ class Register():
     Class representing a register of bits.
     """
 
-    def __init__(self, name=None, width=None, rw=None, address_offset=None):
+    def __init__(self, name=None, width=None, rw=None):
         self.name = name
         self._width = width
         if self._width:
@@ -40,7 +40,7 @@ class Register():
             self.bits = None
 
         self.rw = rw
-        self.address_offset = address_offset
+        self.address_offset = None
 
 
 class Map():
@@ -65,15 +65,11 @@ class Map():
         """
         Create and add a new register to the map.
         """
-        if rw in VALID_WRITE_PROTECTION:
-            self.registers[name] = Register(
-                                        name,
-                                        width=self._width,
-                                        address_offset=self._address_count)
-            self._address_count += 1
-        else:
+        if rw not in VALID_WRITE_PROTECTION:
             raise ValueError("{} is not a valid input, valid inputs \
                               are {}".format(rw, VALID_WRITE_PROTECTION))
+
+        self.registers[name] = Register(name, width=self._width)
 
     def set_bit_name(self, reg_name, bit_number, bit_name):
         self.registers[reg_name].bits[bit_number].name = bit_name
@@ -92,6 +88,16 @@ class Map():
         type before being stored.
         """
         self.__output_dir = Path(output_dir)
+
+    def _set_addresses(self):
+        """
+        Set the addresses of the registers in the map.
+        """
+        word_size_bytes = self._width / 8
+        address = 0
+        for key, reg in self.registers.items():
+            reg.address_offset = int(address)
+            address += word_size_bytes
 
     def create(self, output_types):
         """
