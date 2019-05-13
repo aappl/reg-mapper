@@ -6,19 +6,19 @@ map using named addresses.
 """
 
 
-def create_vhdl(map):
+def create_vhdl(reg_map):
     """
     Create a VHDL package with constants to allow the use of the register map.
     """
     # Create variable to hold the output VHDL
     output_vhdl = ""
 
-    output_vhdl += vhdl_package_header(map)
+    output_vhdl += vhdl_package_header(reg_map)
 
     # Add registers and their addresses
     registers_vhdl = ""
     bits_vhdl = ""
-    for key, reg in map.registers.items():
+    for _, reg in reg_map.registers.items():
         registers_vhdl += vhdl_register_address(reg)
         for bit in reg.bits:
             if bit.name is not None:
@@ -27,24 +27,24 @@ def create_vhdl(map):
     output_vhdl += registers_vhdl
     output_vhdl += bits_vhdl
 
-    output_vhdl += vhdl_package_footer(map)
+    output_vhdl += vhdl_package_footer(reg_map)
 
     print(output_vhdl)
     return output_vhdl
 
 
-def vhdl_package_header(map):
+def vhdl_package_header(reg_map):
     """
     Return a string with the header for a VHDL package.
     """
-    return "package {} is\n".format(map.name)
+    return "package {} is\n".format(reg_map.name)
 
 
-def vhdl_package_footer(map):
+def vhdl_package_footer(reg_map):
     """
     Return a string with the footer for a VHDL package.
     """
-    return "end package {};\n".format(map.name)
+    return "end package {};\n".format(reg_map.name)
 
 
 def vhdl_register_address(reg):

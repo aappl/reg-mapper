@@ -72,6 +72,9 @@ class Map():
         self.registers[name] = Register(name, width=self._width)
 
     def set_bit_name(self, reg_name, bit_number, bit_name):
+        """
+        Set the name of a bit in the register.
+        """
         self.registers[reg_name].bits[bit_number].name = bit_name
 
     @property
@@ -95,7 +98,7 @@ class Map():
         """
         word_size_bytes = self._width / 8
         address = 0
-        for key, reg in self.registers.items():
+        for _, reg in self.registers.items():
             reg.address_offset = int(address)
             address += word_size_bytes
 
