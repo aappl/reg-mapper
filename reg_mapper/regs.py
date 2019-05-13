@@ -12,7 +12,7 @@ from reg_mapper import vhdl_mapper
 
 VALID_WRITE_PROTECTION = ["READ_WRITE", "READ_ONLY"]
 VALID_OUTPUT_TYPES = ["vhdl", "verilog", "c", "html"]
-VALID_WIDTHS = [8, 16, 32, 64, 128, 256, 512, 1048]
+VALID_WIDTHS = [8, 16, 32, 64, 128, 256, 512, 1024]
 
 
 class Bit():

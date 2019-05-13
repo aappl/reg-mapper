@@ -115,24 +115,30 @@ def test_set_addresses(tmpdir):
     """
     Test that the addresses are set correctly.
     """
-    # Create a new map object with a name and a size
-    register_map = regs.Map("system", 32)
 
-    # Create the map by adding registers
-    register_map.add_register("Temperature", "READ_ONLY")
-    register_map.add_register("Humidity",    "READ_ONLY")
-    register_map.add_register("Gyro1",       "READ_ONLY")
-    register_map.add_register("Gyro2",       "READ_ONLY")
-    register_map.add_register("LEDs",        "READ_WRITE")
+    bit_widths = [8, 16, 32, 64, 128, 256, 1024]
 
-    register_map.set_bit_name("LEDs", 0, "Running")
-    register_map.set_bit_name("LEDs", 1, "Error")
+    for bit_width in bit_widths:
+        word_size_bytes = bit_width / 8
 
-    register_map._set_addresses()
+        # Create a new map object with a name and a size
+        register_map = regs.Map("system", bit_width)
 
-    # Check addresses are added correctly
-    assert register_map.registers["Temperature"].address_offset == 0
-    assert register_map.registers["Humidity"].address_offset == 4
-    assert register_map.registers["Gyro1"].address_offset == 8
-    assert register_map.registers["Gyro2"].address_offset == 12
-    assert register_map.registers["LEDs"].address_offset == 16
+        # Create the map by adding registers
+        register_map.add_register("Temperature", "READ_ONLY")
+        register_map.add_register("Humidity",    "READ_ONLY")
+        register_map.add_register("Gyro1",       "READ_ONLY")
+        register_map.add_register("Gyro2",       "READ_ONLY")
+        register_map.add_register("LEDs",        "READ_WRITE")
+
+        register_map.set_bit_name("LEDs", 0, "Running")
+        register_map.set_bit_name("LEDs", 1, "Error")
+
+        register_map._set_addresses()
+
+        # Check addresses are added correctly
+        assert register_map.registers["Temperature"].address_offset == 0
+        assert register_map.registers["Humidity"].address_offset == word_size_bytes
+        assert register_map.registers["Gyro1"].address_offset == word_size_bytes * 2
+        assert register_map.registers["Gyro2"].address_offset == word_size_bytes * 3
+        assert register_map.registers["LEDs"].address_offset == word_size_bytes * 4
