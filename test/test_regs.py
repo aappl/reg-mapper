@@ -15,8 +15,7 @@ def test_bit():
     """
     Test that a bit can be created.
     """
-    new_bit = regs.Bit(0)
-    new_bit.name = "new_bit"
+    new_bit = regs.Bit("new_bit", 0)
 
     assert new_bit.name == "new_bit"
     assert new_bit.number == 0
@@ -144,13 +143,13 @@ def test_add_bit_map():
     register_map.add_bit_map("LEDs", 1, 1, "Error")
     register_map.add_bit_map("LEDs", 2, 8, "Count")
 
-    assert register_map.registers["LEDs"].bits[0].name == "Running"
-    assert register_map.registers["LEDs"].bits[1].name == "Error"
-    assert register_map.registers["LEDs"].bits[2].name == "Count_0"
-    assert register_map.registers["LEDs"].bits[3].name == "Count_1"
-    assert register_map.registers["LEDs"].bits[4].name == "Count_2"
-    assert register_map.registers["LEDs"].bits[5].name == "Count_3"
-    assert register_map.registers["LEDs"].bits[6].name == "Count_4"
-    assert register_map.registers["LEDs"].bits[7].name == "Count_5"
-    assert register_map.registers["LEDs"].bits[8].name == "Count_6"
-    assert register_map.registers["LEDs"].bits[9].name == "Count_7"
+    assert register_map.registers["LEDs"].bit_groups[0].bits[0].name == "Running"
+    assert register_map.registers["LEDs"].bit_groups[1].bits[0].name == "Error"
+    assert register_map.registers["LEDs"].bit_groups[2].bits[0].name == "Count_0"
+    assert register_map.registers["LEDs"].bit_groups[2].bits[1].name == "Count_1"
+    assert register_map.registers["LEDs"].bit_groups[2].bits[2].name == "Count_2"
+    assert register_map.registers["LEDs"].bit_groups[2].bits[3].name == "Count_3"
+    assert register_map.registers["LEDs"].bit_groups[2].bits[4].name == "Count_4"
+    assert register_map.registers["LEDs"].bit_groups[2].bits[5].name == "Count_5"
+    assert register_map.registers["LEDs"].bit_groups[2].bits[6].name == "Count_6"
+    assert register_map.registers["LEDs"].bit_groups[2].bits[7].name == "Count_7"

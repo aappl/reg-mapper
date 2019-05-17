@@ -20,9 +20,27 @@ class Bit():
     Class representing one bit in a register.
     """
 
-    def __init__(self, number):
-        self.name = None
+    def __init__(self, name, number):
+        self.name = name
         self.number = number
+
+    def __str__(self):
+        return "{} : {}".format(self.number, self.name)
+
+
+class BitGroup():
+    """
+    Class representing a group of bits in a register.
+    """
+
+    def __init__(self, name, index, width):
+        self.bits = []
+        if width > 1:
+            for index_num in range(index, index+width):
+                print(index_num-index)
+                self.bits.append(Bit(name + "_{}".format(index_num-index), index_num))
+        else:
+            self.bits.append(Bit(name, index))
 
 
 class Register():
@@ -30,15 +48,10 @@ class Register():
     Class representing a register of bits.
     """
 
-    def __init__(self, name=None, width=None, rw=None):
+    def __init__(self, name, width, rw=None):
         self.name = name
         self._width = width
-        if self._width:
-            # Create empty set of bits
-            self.bits = [Bit(i) for i in range(width)]
-        else:
-            self.bits = None
-
+        self.bit_groups = []
         self.rw = rw
         self.address_offset = None
 
@@ -69,17 +82,13 @@ class Map():
             raise ValueError("{} is not a valid input, valid inputs \
                               are {}".format(rw, VALID_WRITE_PROTECTION))
 
-        self.registers[name] = Register(name, width=self._width)
+        self.registers[name] = Register(name, self._width)
 
     def add_bit_map(self, reg_name, bit_number, offset, bit_name):
         """
         Set the name of a bit or group of bits in the register.
         """
-        if offset > 1:
-            for bit in range(bit_number, bit_number+offset):
-                self.registers[reg_name].bits[bit].name = bit_name + "_{}".format(bit-bit_number)
-        else:
-            self.registers[reg_name].bits[bit_number].name = bit_name
+        self.registers[reg_name].bit_groups.append(BitGroup(bit_name, bit_number, offset))
 
 
     @property
