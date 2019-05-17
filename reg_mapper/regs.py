@@ -71,11 +71,16 @@ class Map():
 
         self.registers[name] = Register(name, width=self._width)
 
-    def set_bit_name(self, reg_name, bit_number, bit_name):
+    def add_bit_map(self, reg_name, bit_number, offset, bit_name):
         """
-        Set the name of a bit in the register.
+        Set the name of a bit or group of bits in the register.
         """
-        self.registers[reg_name].bits[bit_number].name = bit_name
+        if offset > 1:
+            for bit in range(bit_number, bit_number+offset):
+                self.registers[reg_name].bits[bit].name = bit_name + "_{}".format(bit-bit_number)
+        else:
+            self.registers[reg_name].bits[bit_number].name = bit_name
+
 
     @property
     def output_dir(self):

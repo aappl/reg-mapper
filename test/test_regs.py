@@ -50,9 +50,6 @@ def test_map(tmpdir):
     register_map.add_register("Gyro2",       "READ_ONLY")
     register_map.add_register("LEDs",        "READ_WRITE")
 
-    register_map.set_bit_name("LEDs", 0, "Running")
-    register_map.set_bit_name("LEDs", 1, "Error")
-
     # Check values are added correctly
     assert register_map.registers["Temperature"].name == "Temperature"
     assert register_map.registers["Humidity"].name == "Humidity"
@@ -65,9 +62,6 @@ def test_map(tmpdir):
     assert register_map.registers["Gyro1"]._width == 8
     assert register_map.registers["Gyro2"]._width == 8
     assert register_map.registers["LEDs"]._width == 8
-
-    assert register_map.registers["LEDs"].bits[0].name == "Running"
-    assert register_map.registers["LEDs"].bits[1].name == "Error"
 
 
 def test_add_register_exception():
@@ -131,9 +125,6 @@ def test_set_addresses(tmpdir):
         register_map.add_register("Gyro2",       "READ_ONLY")
         register_map.add_register("LEDs",        "READ_WRITE")
 
-        register_map.set_bit_name("LEDs", 0, "Running")
-        register_map.set_bit_name("LEDs", 1, "Error")
-
         register_map._set_addresses()
 
         # Check addresses are added correctly
@@ -142,3 +133,24 @@ def test_set_addresses(tmpdir):
         assert register_map.registers["Gyro1"].address_offset == word_size_bytes * 2
         assert register_map.registers["Gyro2"].address_offset == word_size_bytes * 3
         assert register_map.registers["LEDs"].address_offset == word_size_bytes * 4
+
+
+def test_add_bit_map():
+    # Create a new map object with a name and a size
+    register_map = regs.Map("system", 32)
+
+    register_map.add_register("LEDs", "READ_WRITE")
+    register_map.add_bit_map("LEDs", 0, 1, "Running")
+    register_map.add_bit_map("LEDs", 1, 1, "Error")
+    register_map.add_bit_map("LEDs", 2, 8, "Count")
+
+    assert register_map.registers["LEDs"].bits[0].name == "Running"
+    assert register_map.registers["LEDs"].bits[1].name == "Error"
+    assert register_map.registers["LEDs"].bits[2].name == "Count_0"
+    assert register_map.registers["LEDs"].bits[3].name == "Count_1"
+    assert register_map.registers["LEDs"].bits[4].name == "Count_2"
+    assert register_map.registers["LEDs"].bits[5].name == "Count_3"
+    assert register_map.registers["LEDs"].bits[6].name == "Count_4"
+    assert register_map.registers["LEDs"].bits[7].name == "Count_5"
+    assert register_map.registers["LEDs"].bits[8].name == "Count_6"
+    assert register_map.registers["LEDs"].bits[9].name == "Count_7"

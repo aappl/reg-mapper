@@ -24,8 +24,8 @@ def test_create_vhdl(tmpdir):
     register_map.add_register("Gyro2",       "READ_ONLY")
     register_map.add_register("LEDs",        "READ_WRITE")
 
-    register_map.set_bit_name("LEDs", 0, "Running")
-    register_map.set_bit_name("LEDs", 1, "Error")
+    register_map.add_bit_map("LEDs", 0, 1, "Running")
+    register_map.add_bit_map("LEDs", 1, 1, "Error")
 
     # Tell the program where to output the files
     register_map.output_dir = Path(tmpdir) / "maps"
