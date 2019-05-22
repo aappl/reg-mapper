@@ -1,0 +1,3 @@
+
+class BitAssignmentError(Exception):
+    pass

@@ -9,6 +9,7 @@ import pytest
 
 from context import reg_mapper
 from reg_mapper import regs
+from reg_mapper import exceptions
 
 
 def test_bit():
@@ -153,3 +154,15 @@ def test_add_bit_map():
     assert register_map.registers["LEDs"].bit_groups[2].bits[5].name == "Count_5"
     assert register_map.registers["LEDs"].bit_groups[2].bits[6].name == "Count_6"
     assert register_map.registers["LEDs"].bit_groups[2].bits[7].name == "Count_7"
+
+
+def test_check_bit_groups():
+    # Create a new map object with a name and a size
+    register_map = regs.Map("system", 32)
+
+    register_map.add_register("LEDs", "READ_WRITE")
+    register_map.add_bit_map("LEDs", 5, 1, "Error")
+    register_map.add_bit_map("LEDs", 2, 8, "Count")
+
+    with pytest.raises(exceptions.BitAssignmentError):
+        register_map._check_bit_groups()

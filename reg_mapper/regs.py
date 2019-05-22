@@ -8,6 +8,7 @@ class representing a single bit in a register with a name.
 from pathlib import Path
 
 from reg_mapper import vhdl_mapper
+from reg_mapper import exceptions
 
 
 VALID_WRITE_PROTECTION = ["READ_WRITE", "READ_ONLY"]
@@ -37,7 +38,6 @@ class BitGroup():
         self.bits = []
         if width > 1:
             for index_num in range(index, index+width):
-                print(index_num-index)
                 self.bits.append(Bit(name + "_{}".format(index_num-index), index_num))
         else:
             self.bits.append(Bit(name, index))
@@ -115,6 +115,19 @@ class Map():
         for _, reg in self.registers.items():
             reg.address_offset = int(address)
             address += word_size_bytes
+
+    def _check_bit_groups(self):
+        """
+        Check that the bit groups don't overlap.
+        """
+        bits_in_use = []
+        for _, reg in self.registers.items():
+            for group in reg.bit_groups:
+                for bit in group.bits:
+                    if bit.number in bits_in_use:
+                        raise exceptions.BitAssignmentError("\n\nBit assigned multiple times\nRegister : {}\nBit: {}\n".format(reg.name, bit.number))
+                    else:
+                        bits_in_use.append(bit.number)
 
     def create(self, output_types):
         """
