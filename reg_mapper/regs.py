@@ -54,6 +54,7 @@ class Register():
         self.bit_groups = []
         self.rw = rw
         self.address_offset = None
+        self.description = ""
 
 
 class Map():
@@ -89,7 +90,6 @@ class Map():
         Set the name of a bit or group of bits in the register.
         """
         self.registers[reg_name].bit_groups.append(BitGroup(bit_name, bit_number, offset))
-
 
     @property
     def output_dir(self):
@@ -128,6 +128,12 @@ class Map():
                         raise exceptions.BitAssignmentError("\n\nBit assigned multiple times\nRegister : {}\nBit: {}\n".format(reg.name, bit.number))
                     else:
                         bits_in_use.append(bit.number)
+
+    def add_register_description(self, reg_name, description):
+        """
+        Add a description to a register.
+        """
+        self.registers[reg_name].description = description
 
     def create(self, output_types):
         """

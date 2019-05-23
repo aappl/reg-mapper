@@ -166,3 +166,15 @@ def test_check_bit_groups():
 
     with pytest.raises(exceptions.BitAssignmentError):
         register_map._check_bit_groups()
+
+
+def test_add_register_description():
+    # Create a new map object with a name and a size
+    register_map = regs.Map("system", 32)
+
+    register_map.add_register("LEDs", "READ_WRITE")
+
+    description = "LED output register."
+    register_map.add_register_description("LEDs", description)
+
+    assert register_map.registers["LEDs"].description == description
