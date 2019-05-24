@@ -1,0 +1,87 @@
+
+#------------------------------------------------
+# Register map
+#------------------------------------------------
+my_register_map :
+  # Settings
+  width: 32
+
+  registers:
+    Temperature:
+      description: "The temperature of the device at time of measurement."
+      RW: "READ_ONLY"
+
+    Humidity:
+      description: "The humidity of the device at time of measurement."
+      RW: "READ_ONLY"
+
+    LEDs:
+      description: "Output display to user."
+      RW: "READ_WRITE"
+      bits:
+        Running:
+          description: "Shows that the device is running."
+          start_bit: 0
+          width: 1
+
+        Error:
+          description: "Shows that there is an error in the device."
+          start_bit: 1
+          width: 1
+
+        Count:
+          description: "The value of the internal counter."
+          start_bit: 2
+          width: 8
+
+    Gyro1:
+      description: "Device orientation in the A axis."
+      RW: "READ_ONLY"
+
+    Gyro2:
+      description: "Device orientation in the B axis."
+      RW: "READ_ONLY"
+
+
+#------------------------------------------------
+# A second register map in the same file
+#------------------------------------------------
+my_register_map2 :
+  # Settings
+  width: 32
+
+  registers:
+    Temperature:
+      description: "The temperature of the device at time of measurement."
+      RW: "READ_ONLY"
+
+    Humidity:
+      description: "The humidity of the device at time of measurement."
+      RW: "READ_ONLY"
+
+    LEDs:
+      description: "Output display to user."
+      RW: "READ_WRITE"
+      bits:
+        Running:
+          description: "Shows that the device is running."
+          start_bit: 0
+          width: 1
+
+        Error:
+          description: "Shows that there is an error in the device."
+          start_bit: 1
+          width: 1
+
+        Count:
+          description: "The value of the internal counter."
+          start_bit: 2
+          width: 8
+
+    Gyro1:
+      description: "Device orientation in the A axis."
+      RW: "READ_ONLY"
+
+    Gyro2:
+      description: "Device orientation in the B axis."
+      RW: "READ_ONLY"
