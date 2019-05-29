@@ -34,8 +34,6 @@ def test_get_bits():
 
         reg_maps = reg_map.Map(maps)
 
-        print(reg_maps.get_bits("my_register_map", "LEDs"))
-
         assert reg_maps.get_bits("my_register_map", "LEDs") == {
             'Running': {
                 'description': 'Shows that the device is running.',
@@ -53,3 +51,25 @@ def test_get_bits():
                 'width': 8
             }
         }
+
+
+def test_set_addresses():
+    with open("../test/test.cson", 'r') as f:
+        cson_data = f.read()
+        maps = cson.loads(cson_data)
+
+        reg_maps = reg_map.Map(maps)
+
+        reg_maps.set_addresses()
+
+        assert reg_maps.maps["my_register_map"]["registers"]["Temperature"]["address"] == 0
+        assert reg_maps.maps["my_register_map"]["registers"]["Humidity"]["address"] == 4
+        assert reg_maps.maps["my_register_map"]["registers"]["LEDs"]["address"] == 8
+        assert reg_maps.maps["my_register_map"]["registers"]["Gyro1"]["address"] == 12
+        assert reg_maps.maps["my_register_map"]["registers"]["Gyro2"]["address"] == 16
+
+        assert reg_maps.maps["my_register_map2"]["registers"]["Temperature"]["address"] == 0
+        assert reg_maps.maps["my_register_map2"]["registers"]["Humidity"]["address"] == 4
+        assert reg_maps.maps["my_register_map2"]["registers"]["LEDs"]["address"] == 8
+        assert reg_maps.maps["my_register_map2"]["registers"]["Gyro1"]["address"] == 12
+        assert reg_maps.maps["my_register_map2"]["registers"]["Gyro2"]["address"] == 16

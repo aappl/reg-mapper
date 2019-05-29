@@ -28,3 +28,14 @@ class Map():
         for bit, _ in self.maps[reg_map]["registers"][register]["bits"].items():
             bits[bit] = self.maps[reg_map]["registers"][register]["bits"][bit]
         return bits
+
+    def set_addresses(self):
+        """
+        Set addresses for each of the registers.
+        """
+        for reg_map, _ in self.maps.items():
+            word_size_bytes = self.maps[reg_map]["width"] / 8
+            address = 0
+            for register, _ in self.maps[reg_map]["registers"].items():
+                self.maps[reg_map]["registers"][register]["address"] = address
+                address += word_size_bytes
