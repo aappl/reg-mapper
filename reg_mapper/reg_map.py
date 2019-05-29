@@ -8,15 +8,23 @@ class Map():
     def __init__(self, maps):
         self.maps = maps
 
-    def get_reg_numbers(self):
-        reg_map_nums = {}
-        for reg_map, _ in self.maps.items():
-            address = 0
-            reg_nums = {}
-            for register, _ in self.maps[reg_map]["registers"].items():
-                reg_nums[register] = address
-                address += 1
+    def get_reg_numbers(self, reg_map):
+        """
+        Get a dictionary of register names with addresses assigned.
+        """
+        reg_nums = {}
+        address = 0
+        for register, _ in self.maps[reg_map]["registers"].items():
+            reg_nums[register] = address
+            address += 1
 
-            reg_map_nums[reg_map] = reg_nums
+        return reg_nums
 
-        return reg_map_nums
+    def get_bits(self, reg_map, register):
+        """
+        Get a dictionary of bit names with start numbers and widths.
+        """
+        bits = {}
+        for bit, _ in self.maps[reg_map]["registers"][register]["bits"].items():
+            bits[bit] = self.maps[reg_map]["registers"][register]["bits"][bit]
+        return bits
