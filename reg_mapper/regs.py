@@ -67,9 +67,7 @@ class Map():
         self._width = width
         # Check width is allowed
         if self._width not in VALID_WIDTHS:
-            raise ValueError("Width value not allowed {},\
-                              valid values are {}".format(self._width,
-                                                          VALID_WIDTHS))
+            raise ValueError("Width value not allowed {}, valid values are {}".format(self._width, VALID_WIDTHS))
         self._address_count = 0
         self.registers = {}
         self.output_dir = Path("register_maps")

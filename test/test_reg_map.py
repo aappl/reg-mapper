@@ -18,12 +18,12 @@ def test_get_reg_numbers():
         maps = cson.loads(cson_data)
 
         reg_maps = reg_map.Map(maps)
-        assert reg_maps.get_reg_numbers("my_register_map") == {
+        assert reg_maps.get_reg_addresses("my_register_map") == {
             'Temperature': 0,
-            'Humidity': 1,
-            'LEDs': 2,
-            'Gyro1': 3,
-            'Gyro2': 4
+            'Humidity': 4,
+            'LEDs': 8,
+            'Gyro1': 12,
+            'Gyro2': 16
         }
 
 
@@ -60,7 +60,7 @@ def test_set_addresses():
 
         reg_maps = reg_map.Map(maps)
 
-        reg_maps.set_addresses()
+        reg_maps._set_addresses()
 
         assert reg_maps.maps["my_register_map"]["registers"]["Temperature"]["address"] == 0
         assert reg_maps.maps["my_register_map"]["registers"]["Humidity"]["address"] == 4
