@@ -78,16 +78,15 @@ class Map():
         Create and add a new register to the map.
         """
         if rw not in VALID_WRITE_PROTECTION:
-            raise ValueError("{} is not a valid input, valid inputs \
-                              are {}".format(rw, VALID_WRITE_PROTECTION))
+            raise ValueError("{} is not a valid input, valid inputs are {}".format(rw, VALID_WRITE_PROTECTION))
 
         self.registers[name] = Register(name, self._width)
 
-    def add_bit_map(self, reg_name, bit_number, offset, bit_name):
+    def add_bit_map(self, reg_name, bit_number, width, bit_name):
         """
         Set the name of a bit or group of bits in the register.
         """
-        self.registers[reg_name].bit_groups.append(BitGroup(bit_name, bit_number, offset))
+        self.registers[reg_name].bit_groups.append(BitGroup(bit_name, bit_number, width))
 
     @property
     def output_dir(self):

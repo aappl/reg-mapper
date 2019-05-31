@@ -4,11 +4,16 @@ import json
 
 import cson
 
+from reg_mapper import regs
+
 class RegMapper():
-    """The user interface to the Register Mapper library."""
+    """
+    The user interface to the Register Mapper library.
+    """
 
     def __init__(self, reg_maps):
         self.maps = None
+        self.map_objs = {}
 
         if isinstance(reg_maps, str):
             reg_file = Path(reg_maps)
@@ -30,3 +35,35 @@ class RegMapper():
 
         else:
             raise TypeError("{} invalid: Valid types are string or dictionary".format(type(reg_maps)))
+
+        self._create_maps()
+
+    def _create_maps(self):
+        """
+        Fill the map_objs variable with register maps.
+        """
+        # For each register map in the input
+        for map, _ in self.maps.items():
+            # Create a new Map object
+            self.map_objs[map] = regs.Map(map, self.maps[map]["width"])
+
+            # Add all of the registers in the map to the new object
+            for reg, _ in self.maps[map]["registers"].items():
+                self.map_objs[map].add_register(reg, self.maps[map]["registers"][reg]["RW"])
+
+                # Add all of the bit maps in the register to the new object
+                if "bits" in self.maps[map]["registers"][reg]:
+                    for bit, _ in self.maps[map]["registers"][reg]["bits"].items():
+                        self.map_objs[map].add_bit_map(
+                            reg,
+                            self.maps[map]["registers"][reg]["bits"][bit]["start_bit"],
+                            self.maps[map]["registers"][reg]["bits"][bit]["width"],
+                            bit
+                        )
+
+                # Add the description to the new object
+                if self.maps[map]["registers"][reg]["description"]:
+                    self.map_objs[map].add_register_description(
+                        reg,
+                        self.maps[map]["registers"][reg]["description"]
+                    )
