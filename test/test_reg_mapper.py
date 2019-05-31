@@ -22,6 +22,5 @@ def test_RegMapper_inputs():
 
 def test_RegMapper_data():
     reg_maps = reg_mapper.RegMapper("test.cson")
-    print(reg_maps.map_objs)
     for map, _ in reg_maps.map_objs.items():
         assert isinstance(reg_maps.map_objs[map], regs.Map)

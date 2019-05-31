@@ -125,7 +125,7 @@ def test_set_addresses(tmpdir):
         register_map.add_register("Gyro2",       "READ_ONLY")
         register_map.add_register("LEDs",        "READ_WRITE")
 
-        register_map._set_addresses()
+        register_map.set_addresses()
 
         # Check addresses are added correctly
         assert register_map.registers["Temperature"].address_offset == 0

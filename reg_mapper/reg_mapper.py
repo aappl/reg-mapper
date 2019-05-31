@@ -37,6 +37,7 @@ class RegMapper():
             raise TypeError("{} invalid: Valid types are string or dictionary".format(type(reg_maps)))
 
         self._create_maps()
+        self._set_addresses()
 
     def _create_maps(self):
         """
@@ -67,3 +68,10 @@ class RegMapper():
                         reg,
                         self.maps[map]["registers"][reg]["description"]
                     )
+
+    def _set_addresses(self):
+        """
+        Set the addresses of all the registers in the maps.
+        """
+        for reg_map, _ in self.map_objs.items():
+            self.map_objs[reg_map].set_addresses()

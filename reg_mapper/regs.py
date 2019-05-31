@@ -35,10 +35,12 @@ class BitGroup():
     """
 
     def __init__(self, name, index, width):
+        self.name = name
         self.bits = []
         if width > 1:
             for index_num in range(index, index+width):
-                self.bits.append(Bit(name + "_{}".format(index_num-index), index_num))
+                bit_number = index_num - index
+                self.bits.append(Bit(name + "_{}".format(bit_number), bit_number))
         else:
             self.bits.append(Bit(name, index))
 
@@ -103,7 +105,7 @@ class Map():
         """
         self.__output_dir = Path(output_dir)
 
-    def _set_addresses(self):
+    def set_addresses(self):
         """
         Set the addresses of the registers in the map.
         """
