@@ -37,6 +37,8 @@ class BitGroup():
     def __init__(self, name, index, width):
         self.name = name
         self.bits = []
+        self.index = index
+        self.width = width
         if width > 1:
             for index_num in range(index, index+width):
                 bit_number = index_num - index

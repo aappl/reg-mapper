@@ -7,7 +7,6 @@ from pathlib import Path
 
 from context import reg_mapper
 from reg_mapper import reg_mapper
-from reg_mapper import regs
 from reg_mapper import vhdl_mapper
 
 
