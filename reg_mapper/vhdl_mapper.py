@@ -6,6 +6,9 @@ map using named addresses.
 """
 
 
+INDENT = "  "
+
+
 def create_vhdl(reg_map):
     """
     Create a VHDL package with constants to allow the use of the register map.
@@ -16,17 +19,15 @@ def create_vhdl(reg_map):
     output_vhdl += vhdl_package_header(reg_map.name)
 
     # Add registers and their addresses
-    registers_vhdl = ""
-    bits_vhdl = ""
     for reg_name, _ in reg_map.registers.items():
         reg = reg_map.registers[reg_name]
-        registers_vhdl += vhdl_register_address(reg.name, reg.address_offset)
+        output_vhdl += "\n"
+        output_vhdl += INDENT + vhdl_register_address(reg.name, reg.address_offset)
         for bit_group in reg.bit_groups:
             for bit in bit_group.bits:
-                bits_vhdl += vhdl_bit_name(reg.name, bit.name, bit.number)
+                output_vhdl += INDENT + vhdl_bit_name(reg.name, bit.name, bit.number)
 
-    output_vhdl += registers_vhdl
-    output_vhdl += bits_vhdl
+    output_vhdl += "\n"
 
     output_vhdl += vhdl_package_footer(reg_map.name)
 
