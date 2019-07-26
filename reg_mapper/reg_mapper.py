@@ -16,63 +16,53 @@ class RegMapper():
     The user interface to the Register Mapper library.
     """
 
-    def __init__(self, reg_maps):
-        self.maps = None
-        self.map_objs = {}
+    def __init__(self):
+        self._maps = []
 
-        if isinstance(reg_maps, str):
-            reg_file = Path(reg_maps)
-            if not reg_file.exists():
-                raise FileNotFoundError(reg_file)
-
-            if reg_file.suffix == ".json":
-                with open(reg_maps, 'r') as f:
-                    json_data = f.read()
-                    self.maps = json.loads(json_data)
-
-            elif reg_file.suffix == ".cson":
-                with open(reg_maps, 'r') as f:
-                    cson_data = f.read()
-                    self.maps = cson.loads(cson_data)
-
-        elif isinstance(reg_maps, dict):
-            self.maps = reg_maps
-
-        else:
-            raise TypeError("{} invalid: Valid types are string or dictionary".format(type(reg_maps)))
-
-        self._create_maps()
-        self._set_addresses()
-
-    def _create_maps(self):
+    def add_map(self, map):
         """
-        Fill the map_objs variable with register maps.
+        Fill the _maps attribute with register maps. This method converts the
+        dictionary input into a Maps object.
         """
-        # For each register map in the input
-        for map, _ in self.maps.items():
-            # Create a new Map object
-            self.map_objs[map] = regs.Map(map, self.maps[map]["width"])
+        register_maps = map['register_maps']
+        for map_name, _ in register_maps.items():
+            map = register_maps[map_name]  # map dictionary
+            map_obj = regs.Map()  # map object
 
-            # Add all of the registers in the map to the new object
-            for reg, _ in self.maps[map]["registers"].items():
-                self.map_objs[map].add_register(reg, self.maps[map]["registers"][reg]["RW"])
+            # Fill in attributes of map object
+            map_obj.name = map_name
+            map_obj.width = map["width"]
+            map_obj.base_address = map["base_address"]
 
-                # Add all of the bit maps in the register to the new object
-                if "bits" in self.maps[map]["registers"][reg]:
-                    for bit, _ in self.maps[map]["registers"][reg]["bits"].items():
-                        self.map_objs[map].add_bit_map(
-                            reg,
-                            self.maps[map]["registers"][reg]["bits"][bit]["start_bit"],
-                            self.maps[map]["registers"][reg]["bits"][bit]["width"],
-                            bit
-                        )
+            # Get registers in map
+            registers = map['registers']
+            for register_name, _ in registers.items():
+                register = registers[register_name]  # register dictionary
+                register_obj = regs.Register()  # register object
 
-                # Add the description to the new object
-                if self.maps[map]["registers"][reg]["description"]:
-                    self.map_objs[map].add_register_description(
-                        reg,
-                        self.maps[map]["registers"][reg]["description"]
-                    )
+                # Fill in attributes of register object
+                register_obj.name = register_name
+                register_obj.rw = register["RW"]
+                register_obj.description = register["description"]
+
+                # Get bits in register
+                bits = register['bits']
+                for bit_name, _ in bits.items():
+                    bit = bits[bit_name]  # bit dictionary
+                    bit_obj = regs.Bits()  # bit object
+
+                    # Fill in attributes of bit object
+                    bit_obj.name = bit_name
+                    bit_obj.start_bit = bit["start_bit"]
+                    bit_obj.width = bit["width"]
+                    bit_obj.generate_bits()
+
+                    # Add bit to register object
+                    register_obj.bits.append(bit_obj)
+
+                map_obj.registers.append(register_obj)
+
+            self._maps.append(map_obj)
 
     def _set_addresses(self):
         """

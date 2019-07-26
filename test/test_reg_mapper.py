@@ -6,21 +6,31 @@ from reg_mapper import reg_mapper
 from reg_mapper import regs
 
 
-def test_RegMapper_inputs():
-    regs = reg_mapper.RegMapper("test.json")
-    assert isinstance(regs.maps, dict)
+def test_RegMapper_add_map():
+    # Create a dictionary
+    test_map = {
+        'register_maps': {    # register_maps is a keyword
+            'map1': {           # map1 will be used as the name of the register map
+                "width": 32,    # width is a keyword
+                "base_address": 0x0,  # base address is a keyword
+                'registers': {    # registers is a keyword
+                    'register1': {  # register1 will be used as the name of the register
+                        'description': "The first register.",   # description is a keyword
+                        'RW': 'READ_ONLY',                      # RW is a keyword
+                        'bits': {                               # bits is a keyword
+                            'bit1': {                             # bit1 will be used as the name of the bit
+                                'description': "The first bit.",    # description is a keyword
+                                'start_bit': 0,                     # start_bit is a keyword
+                                'width': 3
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
-    regs = reg_mapper.RegMapper("test.cson")
-    assert isinstance(regs.maps, dict)
+    reg_maps = reg_mapper.RegMapper()
+    reg_maps.add_map(test_map)
 
-    regs = reg_mapper.RegMapper({})
-    assert isinstance(regs.maps, dict)
-
-    with pytest.raises(TypeError):
-        reg_mapper.RegMapper([])
-
-
-def test_RegMapper_data():
-    reg_maps = reg_mapper.RegMapper("test.cson")
-    for map, _ in reg_maps.map_objs.items():
-        assert isinstance(reg_maps.map_objs[map], regs.Map)
+    assert reg_maps._maps[0].name == "map1"

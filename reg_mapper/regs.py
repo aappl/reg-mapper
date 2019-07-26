@@ -29,22 +29,24 @@ class Bit():
         return "{} : {}".format(self.number, self.name)
 
 
-class BitGroup():
+class Bits():
     """
     Class representing a group of bits in a register.
     """
 
-    def __init__(self, name, index, width):
-        self.name = name
-        self.bits = []
-        self.index = index
-        self.width = width
-        if width > 1:
-            for index_num in range(index, index+width):
-                bit_number = index_num - index
-                self.bits.append(Bit(name + "_{}".format(bit_number), bit_number))
+    def __init__(self):
+        self.name = None
+        self._bits = []
+        self.start_bit = None
+        self.width = None
+
+    def generate_bits(self):
+        if self.width > 1:
+            for index_num in range(self.start_bit, self.start_bit+self.width):
+                bit_number = index_num - self.start_bit
+                self._bits.append(Bit(self.name + "_{}".format(bit_number), bit_number))
         else:
-            self.bits.append(Bit(name, index))
+            self._bits.append(Bit(self.name, self.start_bit))
 
 
 class Register():
@@ -52,13 +54,12 @@ class Register():
     Class representing a register of bits.
     """
 
-    def __init__(self, name, width, rw=None):
-        self.name = name
-        self._width = width
-        self.bit_groups = []
-        self.rw = rw
-        self.address_offset = None
+    def __init__(self):
+        self.name = None
+        self.rw = "READ_ONLY"
         self.description = ""
+        self.bits = []
+        self._address_offset = None
 
 
 class Map():
@@ -66,46 +67,11 @@ class Map():
     Class representing a map of registers.
     """
 
-    def __init__(self, name=None, width=32):
-        self.name = name
-        self._width = width
-        # Check width is allowed
-        if self._width not in VALID_WIDTHS:
-            raise ValueError("Width value not allowed {}, valid values are {}".format(self._width, VALID_WIDTHS))
-        self._address_count = 0
-        self.registers = {}
-        self.output_dir = Path("register_maps")
+    def __init__(self):
+        self.name = None
+        self.width = None
+        self.registers = []
         self.base_address = None
-
-    def add_register(self, name, rw):
-        """
-        Create and add a new register to the map.
-        """
-        if rw not in VALID_WRITE_PROTECTION:
-            raise ValueError("{} is not a valid input, valid inputs are {}".format(rw, VALID_WRITE_PROTECTION))
-
-        self.registers[name] = Register(name, self._width)
-
-    def add_bit_map(self, reg_name, bit_number, width, bit_name):
-        """
-        Set the name of a bit or group of bits in the register.
-        """
-        self.registers[reg_name].bit_groups.append(BitGroup(bit_name, bit_number, width))
-
-    @property
-    def output_dir(self):
-        """
-        Returns without modification.
-        """
-        return self.__output_dir
-
-    @output_dir.setter
-    def output_dir(self, output_dir):
-        """
-        Setter for output directory ensures the input gets converted to a Path
-        type before being stored.
-        """
-        self.__output_dir = Path(output_dir)
 
     def set_addresses(self):
         """
@@ -129,28 +95,3 @@ class Map():
                         raise exceptions.BitAssignmentError("\n\nBit assigned multiple times\nRegister : {}\nBit: {}\n".format(reg.name, bit.number))
                     else:
                         bits_in_use.append(bit.number)
-
-    def add_register_description(self, reg_name, description):
-        """
-        Add a description to a register.
-        """
-        self.registers[reg_name].description = description
-
-    def create(self, output_types):
-        """
-        Create the output register map files
-        """
-        # Check that the imput list values are all valid
-        if set(output_types).issubset(VALID_OUTPUT_TYPES):
-            # For every requested output type, create the output file
-            for output_type in output_types:
-                if output_type == "vhdl":
-                    vhdl_mapper.create_vhdl(self)
-                if output_type == "verilog":
-                    raise NotImplementedError()
-                if output_type == "c":
-                    raise NotImplementedError()
-                if output_type == "html":
-                    raise NotImplementedError()
-        else:
-            raise ValueError("Input for output file types is invalid")
