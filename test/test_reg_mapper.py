@@ -17,7 +17,7 @@ def test_RegMapper_add_map():
                     'register1': {  # register1 will be used as the name of the register
                         'description': "The first register.",   # description is a keyword
                         'RW': 'READ_ONLY',                      # RW is a keyword
-                        'bits': {                               # bits is a keyword
+                        'bit_maps': {                             # bit_maps is a keyword
                             'bit1': {                             # bit1 will be used as the name of the bit
                                 'description': "The first bit.",    # description is a keyword
                                 'start_bit': 0,                     # start_bit is a keyword
@@ -33,4 +33,16 @@ def test_RegMapper_add_map():
     reg_maps = reg_mapper.RegMapper()
     reg_maps.add_map(test_map)
 
+    # Test map
     assert reg_maps._maps[0].name == "map1"
+    assert reg_maps._maps[0].width == 32
+    assert reg_maps._maps[0].base_address == 0x0
+    # Test register
+    assert reg_maps._maps[0].registers[0].name == "register1"
+    assert reg_maps._maps[0].registers[0].description == "The first register."
+    assert reg_maps._maps[0].registers[0].rw == "READ_ONLY"
+    # Test bit
+    assert reg_maps._maps[0].registers[0].bit_maps[0].name == "bit1"
+    assert reg_maps._maps[0].registers[0].bit_maps[0].description == "The first bit."
+    assert reg_maps._maps[0].registers[0].bit_maps[0].start_bit == 0
+    assert reg_maps._maps[0].registers[0].bit_maps[0].width == 3

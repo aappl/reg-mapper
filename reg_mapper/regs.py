@@ -29,7 +29,7 @@ class Bit():
         return "{} : {}".format(self.number, self.name)
 
 
-class Bits():
+class BitMap():
     """
     Class representing a group of bits in a register.
     """
@@ -39,6 +39,7 @@ class Bits():
         self._bits = []
         self.start_bit = None
         self.width = None
+        self.description = None
 
     def generate_bits(self):
         if self.width > 1:
@@ -58,7 +59,7 @@ class Register():
         self.name = None
         self.rw = "READ_ONLY"
         self.description = ""
-        self.bits = []
+        self.bit_maps = []
         self._address_offset = None
 
 

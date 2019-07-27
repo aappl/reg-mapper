@@ -46,19 +46,20 @@ class RegMapper():
                 register_obj.description = register["description"]
 
                 # Get bits in register
-                bits = register['bits']
-                for bit_name, _ in bits.items():
-                    bit = bits[bit_name]  # bit dictionary
-                    bit_obj = regs.Bits()  # bit object
+                bit_maps = register['bit_maps']
+                for bit_name, _ in bit_maps.items():
+                    bit = bit_maps[bit_name]  # bit dictionary
+                    bit_obj = regs.BitMap()  # bit object
 
                     # Fill in attributes of bit object
                     bit_obj.name = bit_name
                     bit_obj.start_bit = bit["start_bit"]
                     bit_obj.width = bit["width"]
+                    bit_obj.description = bit["description"]
                     bit_obj.generate_bits()
 
                     # Add bit to register object
-                    register_obj.bits.append(bit_obj)
+                    register_obj.bit_maps.append(bit_obj)
 
                 map_obj.registers.append(register_obj)
 
