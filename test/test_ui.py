@@ -2,7 +2,7 @@
 import pytest
 
 from context import reg_mapper
-from reg_mapper import reg_mapper
+from reg_mapper import ui
 from reg_mapper import regs
 
 
@@ -30,7 +30,7 @@ def test_RegMapper_add_map():
         }
     }
 
-    reg_maps = reg_mapper.RegMapper()
+    reg_maps = ui.RegMapper()
     reg_maps.add_map(test_map)
 
     # Test map
