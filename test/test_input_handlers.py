@@ -1,7 +1,6 @@
 from pathlib import Path
 
 from context import reg_mapper
-from reg_mapper import reg_mapper
 from reg_mapper.input_handlers import input_handlers
 from reg_mapper.input_handlers import get_dicts
 

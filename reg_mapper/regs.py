@@ -7,7 +7,6 @@ class representing a single bit in a register with a name.
 
 from pathlib import Path
 
-from reg_mapper import vhdl_mapper
 from reg_mapper import exceptions
 
 
