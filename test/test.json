@@ -1,19 +1,17 @@
 {
-  "test_map": {
-    "register_maps": {
-      "map1": {
-        "width": 32,
-        "base_address": 0,
-        "registers": {
-          "register1": {
-            "description": "The first register.",
-            "RW": "READ_ONLY",
-            "bit_maps": {
-              "bit1": {
-                "description": "The first bit.",
-                "start_bit": 0,
-                "width": 3
-              }
+  "register_maps": {
+    "map1": {
+      "width": 32,
+      "base_address": 0,
+      "registers": {
+        "register1": {
+          "description": "The first register.",
+          "RW": "READ_ONLY",
+          "bit_maps": {
+            "bit1": {
+              "description": "The first bit.",
+              "start_bit": 0,
+              "width": 3
             }
           }
         }
