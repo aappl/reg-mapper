@@ -5,13 +5,10 @@ For example, a register class defining a name and address offset, or a bit
 class representing a single bit in a register with a name.
 """
 
-from pathlib import Path
-
 from reg_mapper import exceptions
 
 
-VALID_WRITE_PROTECTION = ["READ_WRITE", "READ_ONLY"]
-VALID_OUTPUT_TYPES = ["vhdl", "verilog", "c", "html"]
+VALID_WRITE_PROTECTION = ["READ_WRITE", "READ_ONLY", "WRITE_ONLY"]
 VALID_WIDTHS = [8, 16, 32, 64, 128, 256, 512, 1024]
 
 
@@ -35,7 +32,7 @@ class BitMap():
 
     def __init__(self):
         self.name = None
-        self._bits = []
+        self.bits = []
         self.start_bit = None
         self.width = None
         self.description = None
@@ -44,9 +41,9 @@ class BitMap():
         if self.width > 1:
             for index_num in range(self.start_bit, self.start_bit+self.width):
                 bit_number = index_num - self.start_bit
-                self._bits.append(Bit(self.name + "_{}".format(bit_number), bit_number))
+                self.bits.append(Bit(self.name + "_{}".format(bit_number), index_num))
         else:
-            self._bits.append(Bit(self.name, self.start_bit))
+            self.bits.append(Bit(self.name, self.start_bit))
 
 
 class Register():
@@ -56,10 +53,22 @@ class Register():
 
     def __init__(self):
         self.name = None
-        self.rw = "READ_ONLY"
+        self.rw = "READ_ONLY"  # TODO add protection to make sure only the values above can be set
         self.description = ""
         self.bit_maps = []
-        self._address_offset = None
+        self.address_offset = None
+
+    def check_bit_maps(self):
+        """
+        Check that the bit maps don't overlap.
+        """
+        bits_in_use = []
+        for bit_map in self.bit_maps:
+            for bit in bit_map.bits:
+                if bit.number in bits_in_use:
+                    raise exceptions.BitAssignmentError("\n\nBit assigned multiple times\nRegister : {}\nBit: {}\n".format(self.name, bit.number))
+                else:
+                    bits_in_use.append(bit.number)
 
 
 class Map():
@@ -69,7 +78,7 @@ class Map():
 
     def __init__(self):
         self.name = None
-        self.width = None
+        self.width = None  # TODO add protection to make sure only the values above can be set
         self.registers = []
         self.base_address = None
 
@@ -77,21 +86,8 @@ class Map():
         """
         Set the addresses of the registers in the map.
         """
-        word_size_bytes = self._width / 8
+        word_size_bytes = self.width / 8
         address = 0
-        for _, reg in self.registers.items():
+        for reg in self.registers:
             reg.address_offset = int(address)
             address += word_size_bytes
-
-    def _check_bit_groups(self):
-        """
-        Check that the bit groups don't overlap.
-        """
-        bits_in_use = []
-        for _, reg in self.registers.items():
-            for group in reg.bit_groups:
-                for bit in group.bits:
-                    if bit.number in bits_in_use:
-                        raise exceptions.BitAssignmentError("\n\nBit assigned multiple times\nRegister : {}\nBit: {}\n".format(reg.name, bit.number))
-                    else:
-                        bits_in_use.append(bit.number)

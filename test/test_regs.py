@@ -22,159 +22,135 @@ def test_bit():
     assert new_bit.number == 0
 
 
+def test_bitmap():
+    """
+    Test that a BitMap object can be created and have its attributes set.
+    """
+    # Create some test values
+    name = "new_bitmap"
+    start_bit = 5
+    width = 5
+    description = "I'm a test bit map :)"
+
+    # Create test object
+    new_bitmap = regs.BitMap()
+    new_bitmap.name = name
+    new_bitmap.start_bit = start_bit
+    new_bitmap.width = width
+    new_bitmap.description = description
+    new_bitmap.generate_bits()
+
+    # Assert contents are correct
+    assert new_bitmap.name == name
+    assert new_bitmap.start_bit == start_bit
+    assert new_bitmap.width == width
+    assert new_bitmap.description == description
+
+    for number, bit in enumerate(new_bitmap.bits):
+        assert bit.name == name + "_" + str(number)
+        assert bit.number == number + start_bit
+
+
 def test_register():
     """
-    Test that a register can be created.
+    Test that a Register object has the correct default types
     """
-    name = "my_reg"
-    width = 8
+    reg = regs.Register()
 
-    # Create 8 bit register
-    reg = regs.Register(name, width)
+    assert reg.name is None
+    assert reg.rw == "READ_ONLY"
+    assert reg.description == ""
+    assert reg.bit_maps == []
+    assert reg.address_offset is None
 
-    assert reg.name == name
-    assert reg._width == width
 
-
-def test_map(tmpdir):
+def test_check_bit_maps_exception():
     """
-    Test that a map object can be created.
+    Test that the bit maps will find exceptions correctly.
     """
-    # Create a new map object with a name and a size
-    register_map = regs.Map("system", 8)
+    reg = regs.Register()
+    reg.name = "Test reg"
 
-    # Create the map by adding registers
-    register_map.add_register("Temperature", "READ_ONLY")
-    register_map.add_register("Humidity",    "READ_ONLY")
-    register_map.add_register("Gyro1",       "READ_ONLY")
-    register_map.add_register("Gyro2",       "READ_ONLY")
-    register_map.add_register("LEDs",        "READ_WRITE")
+    # Test overlapping bit map
+    bit_map0 = regs.BitMap()
+    bit_map0.name = "bit_map0"
+    bit_map0.start_bit = 0
+    bit_map0.width = 5
+    bit_map0.generate_bits()
+    bit_map1 = regs.BitMap()
+    bit_map1.name = "bit_map1"
+    bit_map1.start_bit = 2
+    bit_map1.width = 5
+    bit_map1.generate_bits()
 
-    # Check values are added correctly
-    assert register_map.registers["Temperature"].name == "Temperature"
-    assert register_map.registers["Humidity"].name == "Humidity"
-    assert register_map.registers["Gyro1"].name == "Gyro1"
-    assert register_map.registers["Gyro2"].name == "Gyro2"
-    assert register_map.registers["LEDs"].name == "LEDs"
+    # Insert bit maps into register
+    reg.bit_maps.append(bit_map0)
+    reg.bit_maps.append(bit_map1)
 
-    assert register_map.registers["Temperature"]._width == 8
-    assert register_map.registers["Humidity"]._width == 8
-    assert register_map.registers["Gyro1"]._width == 8
-    assert register_map.registers["Gyro2"]._width == 8
-    assert register_map.registers["LEDs"]._width == 8
-
-
-def test_add_register_exception():
-    """
-    Test that a value error is raised when an incorrect value is
-    given for the rw parameter.
-    """
-    with pytest.raises(ValueError):
-        map = regs.Map()
-        map.add_register("test_reg", "Not_Exist")
-
-
-def test_output_dir():
-    """
-    Test that the output directory can be set properly and changed.
-    """
-    reg_map = regs.Map("new_map", 8)
-
-    assert reg_map.output_dir == Path("register_maps")
-
-    reg_map.output_dir = "new_dir"
-    assert reg_map.output_dir == Path("new_dir")
-
-
-def test_base_address():
-    """
-    Test that the base address can be added correctly to the map
-    object.
-    """
-    reg_map = regs.Map("new_map", 32)
-    reg_map.base_address = 16
-
-    assert reg_map.base_address == 16
-
-
-def test_width_checking():
-    """
-    Test that the widths of the registers are checked properly.
-    """
-    with pytest.raises(ValueError):
-        reg_map = regs.Map(width=20)
-
-
-def test_set_addresses(tmpdir):
-    """
-    Test that the addresses are set correctly.
-    """
-
-    bit_widths = [8, 16, 32, 64, 128, 256, 1024]
-
-    for bit_width in bit_widths:
-        word_size_bytes = bit_width / 8
-
-        # Create a new map object with a name and a size
-        register_map = regs.Map("system", bit_width)
-
-        # Create the map by adding registers
-        register_map.add_register("Temperature", "READ_ONLY")
-        register_map.add_register("Humidity",    "READ_ONLY")
-        register_map.add_register("Gyro1",       "READ_ONLY")
-        register_map.add_register("Gyro2",       "READ_ONLY")
-        register_map.add_register("LEDs",        "READ_WRITE")
-
-        register_map.set_addresses()
-
-        # Check addresses are added correctly
-        assert register_map.registers["Temperature"].address_offset == 0
-        assert register_map.registers["Humidity"].address_offset == word_size_bytes
-        assert register_map.registers["Gyro1"].address_offset == word_size_bytes * 2
-        assert register_map.registers["Gyro2"].address_offset == word_size_bytes * 3
-        assert register_map.registers["LEDs"].address_offset == word_size_bytes * 4
-
-
-def test_add_bit_map():
-    # Create a new map object with a name and a size
-    register_map = regs.Map("system", 32)
-
-    register_map.add_register("LEDs", "READ_WRITE")
-    register_map.add_bit_map("LEDs", 0, 1, "Running")
-    register_map.add_bit_map("LEDs", 1, 1, "Error")
-    register_map.add_bit_map("LEDs", 2, 8, "Count")
-
-    assert register_map.registers["LEDs"].bit_groups[0].bits[0].name == "Running"
-    assert register_map.registers["LEDs"].bit_groups[1].bits[0].name == "Error"
-    assert register_map.registers["LEDs"].bit_groups[2].bits[0].name == "Count_0"
-    assert register_map.registers["LEDs"].bit_groups[2].bits[1].name == "Count_1"
-    assert register_map.registers["LEDs"].bit_groups[2].bits[2].name == "Count_2"
-    assert register_map.registers["LEDs"].bit_groups[2].bits[3].name == "Count_3"
-    assert register_map.registers["LEDs"].bit_groups[2].bits[4].name == "Count_4"
-    assert register_map.registers["LEDs"].bit_groups[2].bits[5].name == "Count_5"
-    assert register_map.registers["LEDs"].bit_groups[2].bits[6].name == "Count_6"
-    assert register_map.registers["LEDs"].bit_groups[2].bits[7].name == "Count_7"
-
-
-def test_check_bit_groups():
-    # Create a new map object with a name and a size
-    register_map = regs.Map("system", 32)
-
-    register_map.add_register("LEDs", "READ_WRITE")
-    register_map.add_bit_map("LEDs", 5, 1, "Error")
-    register_map.add_bit_map("LEDs", 2, 8, "Count")
-
+    # Check that an exception is created for the overlapping bit maps
     with pytest.raises(exceptions.BitAssignmentError):
-        register_map._check_bit_groups()
+        reg.check_bit_maps()
 
 
-def test_add_register_description():
-    # Create a new map object with a name and a size
-    register_map = regs.Map("system", 32)
+def test_check_bit_maps():
+    """
+    Test that the bit maps will be checked for overlapping correctly.
+    """
+    reg = regs.Register()
+    reg.name = "Test reg"
 
-    register_map.add_register("LEDs", "READ_WRITE")
+    # Test overlapping bit map
+    bit_map0 = regs.BitMap()
+    bit_map0.name = "bit_map0"
+    bit_map0.start_bit = 0
+    bit_map0.width = 5
+    bit_map0.generate_bits()
+    bit_map1 = regs.BitMap()
+    bit_map1.name = "bit_map1"
+    bit_map1.start_bit = 5
+    bit_map1.width = 5
+    bit_map1.generate_bits()
 
-    description = "LED output register."
-    register_map.add_register_description("LEDs", description)
+    # Insert bit maps into register
+    reg.bit_maps.append(bit_map0)
+    reg.bit_maps.append(bit_map1)
 
-    assert register_map.registers["LEDs"].description == description
+    # Check bit maps are checked without an exception
+    reg.check_bit_maps()
+
+
+def test_map_defaults():
+    """
+    Test that the attributes of the Map object are present and correct.
+    """
+    map = regs.Map()
+
+    assert map.name is None
+    assert map.width is None
+    assert map.registers == []
+    assert map.base_address is None
+
+
+def test_map_set_addresses():
+    """
+    Test that the addresses in the registers can be set correctly with
+    the set_addresses method.
+    """
+    VALID_WIDTHS = [8, 16, 32, 64, 128, 256, 512, 1024]
+
+    for width in VALID_WIDTHS:
+        map = regs.Map()
+        map.width = width
+
+        # Fill map with registers
+        for i in range(10):
+            map.registers.append(regs.Register())
+
+        map.set_addresses()
+
+        word_size_bytes = map.width/8
+        addr_count = 0
+        for reg in map.registers:
+            assert reg.address_offset == addr_count
+            addr_count += word_size_bytes
+            print(addr_count)
