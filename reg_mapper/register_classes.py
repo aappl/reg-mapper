@@ -71,7 +71,7 @@ class Register():
                     bits_in_use.append(bit.number)
 
 
-class Map():
+class RegisterMap():
     """
     Class representing a map of registers.
     """
@@ -91,3 +91,12 @@ class Map():
         for reg in self.registers:
             reg.address_offset = int(address)
             address += word_size_bytes
+
+
+class System():
+    """
+    Class representing a group of register maps, which make up a system.
+    """
+
+    def __init__(self):
+        self.register_maps = []

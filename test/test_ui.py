@@ -3,7 +3,7 @@ import pytest
 
 from context import reg_mapper
 from reg_mapper import ui
-from reg_mapper import regs
+from reg_mapper import register_classes
 
 
 def test_RegMapper_add_map():
@@ -34,15 +34,15 @@ def test_RegMapper_add_map():
     reg_maps.add_map(test_map)
 
     # Test map
-    assert reg_maps._maps[0].name == "map1"
-    assert reg_maps._maps[0].width == 32
-    assert reg_maps._maps[0].base_address == 0x0
+    assert reg_maps.system.register_maps[0].name == "map1"
+    assert reg_maps.system.register_maps[0].width == 32
+    assert reg_maps.system.register_maps[0].base_address == 0x0
     # Test register
-    assert reg_maps._maps[0].registers[0].name == "register1"
-    assert reg_maps._maps[0].registers[0].description == "The first register."
-    assert reg_maps._maps[0].registers[0].rw == "READ_ONLY"
+    assert reg_maps.system.register_maps[0].registers[0].name == "register1"
+    assert reg_maps.system.register_maps[0].registers[0].description == "The first register."
+    assert reg_maps.system.register_maps[0].registers[0].rw == "READ_ONLY"
     # Test bit
-    assert reg_maps._maps[0].registers[0].bit_maps[0].name == "bit1"
-    assert reg_maps._maps[0].registers[0].bit_maps[0].description == "The first bit."
-    assert reg_maps._maps[0].registers[0].bit_maps[0].start_bit == 0
-    assert reg_maps._maps[0].registers[0].bit_maps[0].width == 3
+    assert reg_maps.system.register_maps[0].registers[0].bit_maps[0].name == "bit1"
+    assert reg_maps.system.register_maps[0].registers[0].bit_maps[0].description == "The first bit."
+    assert reg_maps.system.register_maps[0].registers[0].bit_maps[0].start_bit == 0
+    assert reg_maps.system.register_maps[0].registers[0].bit_maps[0].width == 3

@@ -1,6 +1,6 @@
 """
 test_regs
-Test file for the regs module.
+Test file for the register_classes module.
 """
 
 from pathlib import Path
@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 
 from context import reg_mapper
-from reg_mapper import regs
+from reg_mapper import register_classes
 from reg_mapper import exceptions
 
 
@@ -16,7 +16,7 @@ def test_bit():
     """
     Test that a bit can be created.
     """
-    new_bit = regs.Bit("new_bit", 0)
+    new_bit = register_classes.Bit("new_bit", 0)
 
     assert new_bit.name == "new_bit"
     assert new_bit.number == 0
@@ -33,7 +33,7 @@ def test_bitmap():
     description = "I'm a test bit map :)"
 
     # Create test object
-    new_bitmap = regs.BitMap()
+    new_bitmap = register_classes.BitMap()
     new_bitmap.name = name
     new_bitmap.start_bit = start_bit
     new_bitmap.width = width
@@ -55,7 +55,7 @@ def test_register():
     """
     Test that a Register object has the correct default types
     """
-    reg = regs.Register()
+    reg = register_classes.Register()
 
     assert reg.name is None
     assert reg.rw == "READ_ONLY"
@@ -68,16 +68,16 @@ def test_check_bit_maps_exception():
     """
     Test that the bit maps will find exceptions correctly.
     """
-    reg = regs.Register()
+    reg = register_classes.Register()
     reg.name = "Test reg"
 
     # Test overlapping bit map
-    bit_map0 = regs.BitMap()
+    bit_map0 = register_classes.BitMap()
     bit_map0.name = "bit_map0"
     bit_map0.start_bit = 0
     bit_map0.width = 5
     bit_map0.generate_bits()
-    bit_map1 = regs.BitMap()
+    bit_map1 = register_classes.BitMap()
     bit_map1.name = "bit_map1"
     bit_map1.start_bit = 2
     bit_map1.width = 5
@@ -96,16 +96,16 @@ def test_check_bit_maps():
     """
     Test that the bit maps will be checked for overlapping correctly.
     """
-    reg = regs.Register()
+    reg = register_classes.Register()
     reg.name = "Test reg"
 
     # Test overlapping bit map
-    bit_map0 = regs.BitMap()
+    bit_map0 = register_classes.BitMap()
     bit_map0.name = "bit_map0"
     bit_map0.start_bit = 0
     bit_map0.width = 5
     bit_map0.generate_bits()
-    bit_map1 = regs.BitMap()
+    bit_map1 = register_classes.BitMap()
     bit_map1.name = "bit_map1"
     bit_map1.start_bit = 5
     bit_map1.width = 5
@@ -123,7 +123,7 @@ def test_map_defaults():
     """
     Test that the attributes of the Map object are present and correct.
     """
-    map = regs.Map()
+    map = register_classes.RegisterMap()
 
     assert map.name is None
     assert map.width is None
@@ -139,12 +139,12 @@ def test_map_set_addresses():
     VALID_WIDTHS = [8, 16, 32, 64, 128, 256, 512, 1024]
 
     for width in VALID_WIDTHS:
-        map = regs.Map()
+        map = register_classes.RegisterMap()
         map.width = width
 
         # Fill map with registers
         for i in range(10):
-            map.registers.append(regs.Register())
+            map.registers.append(register_classes.Register())
 
         map.set_addresses()
 
@@ -154,3 +154,11 @@ def test_map_set_addresses():
             assert reg.address_offset == addr_count
             addr_count += word_size_bytes
             print(addr_count)
+
+
+def test_system():
+    """
+    Test that the default System class has the correct attributes.
+    """
+    system = register_classes.System()
+    assert system.register_maps == []

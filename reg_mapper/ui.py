@@ -8,7 +8,7 @@ import json
 
 import cson
 
-from reg_mapper import regs
+from reg_mapper import register_classes
 
 
 class RegMapper():
@@ -17,17 +17,17 @@ class RegMapper():
     """
 
     def __init__(self):
-        self._maps = []
+        self.system = register_classes.System()
 
     def add_map(self, map):
         """
-        Fill the _maps attribute with register maps. This method converts the
+        Fill the system attribute with register maps. This method converts the
         dictionary input into a Maps object.
         """
         register_maps = map['register_maps']
         for map_name, _ in register_maps.items():
             map = register_maps[map_name]  # map dictionary
-            map_obj = regs.Map()  # map object
+            map_obj = register_classes.RegisterMap()  # map object
 
             # Fill in attributes of map object
             map_obj.name = map_name
@@ -38,7 +38,7 @@ class RegMapper():
             registers = map['registers']
             for register_name, _ in registers.items():
                 register = registers[register_name]  # register dictionary
-                register_obj = regs.Register()  # register object
+                register_obj = register_classes.Register()  # register object
 
                 # Fill in attributes of register object
                 register_obj.name = register_name
@@ -49,7 +49,7 @@ class RegMapper():
                 bit_maps = register['bit_maps']
                 for bit_name, _ in bit_maps.items():
                     bit = bit_maps[bit_name]  # bit dictionary
-                    bit_obj = regs.BitMap()  # bit object
+                    bit_obj = register_classes.BitMap()  # bit object
 
                     # Fill in attributes of bit object
                     bit_obj.name = bit_name
@@ -63,7 +63,7 @@ class RegMapper():
 
                 map_obj.registers.append(register_obj)
 
-            self._maps.append(map_obj)
+            self.system.register_maps.append(map_obj)
 
     def _set_addresses(self):
         """
