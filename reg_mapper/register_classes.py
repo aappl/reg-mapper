@@ -5,6 +5,8 @@ For example, a register class defining a name and address offset, or a bit
 class representing a single bit in a register with a name.
 """
 
+from textwrap import indent
+
 from reg_mapper import exceptions
 
 
@@ -37,6 +39,19 @@ class BitMap():
         self.width = None
         self.description = None
 
+    def __str__(self):
+        output = ""
+        output += "Name: {}\n".format(self.name)
+        output += "Start Bit: {}\n".format(self.start_bit)
+        output += "Width: {}\n".format(self.width)
+        output += "Description: {}\n".format(self.description)
+        output += "Bits:\n"
+        for bit in self.bits:
+            output += indent(str(bit), "    ")
+            output += "\n"
+
+        return output
+
     def generate_bits(self):
         if self.width > 1:
             for index_num in range(self.start_bit, self.start_bit+self.width):
@@ -57,6 +72,19 @@ class Register():
         self.description = ""
         self.bit_maps = []
         self.address_offset = None
+
+    def __str__(self):
+        output = ""
+        output += "Name: {}\n".format(self.name)
+        output += "RW: {}\n".format(self.rw)
+        output += "Description: {}\n".format(self.description)
+        output += "Address Offset: {}\n".format(self.address_offset)
+        output += "Bit Maps:\n"
+        for bit_map in self.bit_maps:
+            output += indent(str(bit_map), "    ")
+            output += "\n"
+
+        return output
 
     def check_bit_maps(self):
         """
@@ -82,6 +110,18 @@ class RegisterMap():
         self.registers = []
         self.base_address = None
 
+    def __str__(self):
+        output = ""
+        output += "Name: {}\n".format(self.name)
+        output += "Width: {}\n".format(self.width)
+        output += "Base Address: {}\n".format(self.base_address)
+        output += "Registers:\n"
+        for register in self.registers:
+            output += indent(str(register), "    ")
+            output += "\n"
+
+        return output
+
     def set_addresses(self):
         """
         Set the addresses of the registers in the map.
@@ -100,3 +140,12 @@ class System():
 
     def __init__(self):
         self.register_maps = []
+
+    def __str__(self):
+        output = ""
+        output += "Register Maps:\n"
+        for register_map in self.register_maps:
+            output += indent(str(register_map), "    ")
+            output += "\n"
+
+        return output
