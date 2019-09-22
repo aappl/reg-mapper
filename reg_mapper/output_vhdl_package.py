@@ -1,5 +1,4 @@
 """
-vhdl_mapper
 This module takes a generic map object and creates the VHDL text representing
 a register map i.e. a set of constants allowing the user to access a register
 map using named addresses.
@@ -9,7 +8,7 @@ map using named addresses.
 INDENT = "  "
 
 
-def create_vhdl(reg_map):
+def create_vhdl_package(reg_map):
     """
     Create a VHDL package with constants to allow the use of the register map.
     """
@@ -19,12 +18,11 @@ def create_vhdl(reg_map):
     output_vhdl += vhdl_package_header(reg_map.name)
 
     # Add registers and their addresses
-    for reg_name, _ in reg_map.registers.items():
-        reg = reg_map.registers[reg_name]
+    for reg in reg_map.registers:
         output_vhdl += "\n"
         output_vhdl += INDENT + vhdl_register_address(reg.name, reg.address_offset)
-        for bit_group in reg.bit_groups:
-            for bit in bit_group.bits:
+        for bit_map in reg.bit_maps:
+            for bit in bit_map.bits:
                 output_vhdl += INDENT + vhdl_bit_name(reg.name, bit.name, bit.number)
 
     output_vhdl += "\n"
