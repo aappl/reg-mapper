@@ -37,9 +37,14 @@ def create_test_object():
 
         register_map.registers.append(register)
 
+
+    register_map.set_addresses()
+
     system.register_maps.append(register_map)
 
     print(system)
+
+    return system
 
 
 if __name__ == '__main__':
