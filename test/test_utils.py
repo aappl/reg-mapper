@@ -42,8 +42,6 @@ def create_test_object():
 
     system.register_maps.append(register_map)
 
-    print(system)
-
     return system
 
 
