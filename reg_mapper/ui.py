@@ -63,11 +63,5 @@ class RegMapper():
 
                 map_obj.registers.append(register_obj)
 
+            map_obj.set_addresses()
             self.system.register_maps.append(map_obj)
-
-    def _set_addresses(self):
-        """
-        Set the addresses of all the registers in the maps.
-        """
-        for reg_map, _ in self.map_objs.items():
-            self.map_objs[reg_map].set_addresses()
