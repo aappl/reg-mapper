@@ -15,8 +15,11 @@ from reg_mapper import output_vhdl_package
 
 
 def write_output(config, data):
-    output_path = Path(config["output_path"]) / config["filename"]
-    with open(output_path, 'w') as f:
+    output_path = Path(config["output_path"])
+    output_path.mkdir(parents=True, exist_ok=True)
+    output_path = output_path / config["filename"]
+
+    with output_path.open("w") as f:
         f.write(data)
 
 
