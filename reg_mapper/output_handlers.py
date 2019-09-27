@@ -14,11 +14,12 @@ from pathlib import Path
 from reg_mapper import output_vhdl_package
 
 
-def write_output(config, data):
-    output_path = Path(config["output_path"])
-    output_path.mkdir(parents=True, exist_ok=True)
-    output_path = output_path / config["filename"]
+def write_output(output_path, data):
+    # Make sure the output directory exists
+    output_dir = output_path.parent
+    output_dir.mkdir(parents=True, exist_ok=True)
 
+    # Create file
     with output_path.open("w") as f:
         f.write(data)
 
@@ -32,7 +33,8 @@ def vhdl_package_handler(config, system):
         # TODO Put checks here on the vhdl config
         for register_map in system.register_maps:
             output = output_vhdl_package.create_vhdl_package(register_map)
-            write_output(config[vhdl_package_id], output)
+            output_path = Path(config[vhdl_package_id]["output_path"]) / (register_map.name + ".vhd")
+            write_output(output_path, output)
 
 
 output_handlers.append(vhdl_package_handler)

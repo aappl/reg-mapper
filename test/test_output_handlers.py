@@ -6,12 +6,10 @@ import test_utils
 
 
 def test_output_files(tmpdir):
-    FILENAME = "vhdl_output_file.vhd"
     system = test_utils.create_test_object()
     config = {
         "vhdl": {
             "output_path": tmpdir,
-            "filename": FILENAME
         },
         "c": {
             "output_path": tmpdir
@@ -19,7 +17,8 @@ def test_output_files(tmpdir):
     }
     output_handlers.output_files(config, system)
 
-    output_file = Path(tmpdir / FILENAME)
+    filename = system.register_maps[0].name + ".vhd"
+    output_file = tmpdir / filename
     assert output_file.exists()
 
     with open(output_file, 'r') as f:

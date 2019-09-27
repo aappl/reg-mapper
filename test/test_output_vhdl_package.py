@@ -6,7 +6,7 @@ from reg_mapper import output_vhdl_package
 import test_utils
 
 
-def test_create_vhdl(tmpdir):
+def test_create_vhdl():
     """
     Test that the created VHDL text is correct.
     """

@@ -1,6 +1,6 @@
 {
   "register_maps": {
-    "map1": {
+    "map2": {
       "width": 32,
       "base_address": 0,
       "registers": {
