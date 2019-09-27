@@ -8,6 +8,7 @@ import test_utils
 def test_output_files(tmpdir):
     system = test_utils.create_test_object()
     config = {
+        "outputs": ["vhdl"],
         "vhdl": {
             "output_path": tmpdir,
         },

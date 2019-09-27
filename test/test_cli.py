@@ -11,7 +11,12 @@ def test_regmap(tmpdir):
     # Create a test config file
     yaml = YAML()
     config_file = Path("test/config.yaml")
-    yaml.dump({"vhdl": {"output_path": str(tmpdir)}}, config_file)
+    yaml.dump({
+        "outputs": ["vhdl"],
+        "vhdl": {
+            "output_path": str(tmpdir)
+        }
+    }, config_file)
 
     # Test CLI
     runner = CliRunner()

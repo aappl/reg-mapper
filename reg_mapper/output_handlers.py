@@ -29,7 +29,8 @@ output_handlers = []
 
 def vhdl_package_handler(config, system):
     vhdl_package_id = "vhdl"
-    if vhdl_package_id in config:
+    print(config)
+    if vhdl_package_id in config["outputs"]:
         # TODO Put checks here on the vhdl config
         for register_map in system.register_maps:
             output = output_vhdl_package.create_vhdl_package(register_map)
