@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from click.testing import CliRunner
-import cson
+from ruamel.yaml import YAML
 
 from context import reg_mapper
 from reg_mapper import cli
@@ -9,14 +9,13 @@ from reg_mapper import cli
 
 def test_regmap(tmpdir):
     # Create a test config file
-    config = cson.dumps({"vhdl": {"output_path": str(tmpdir), "filename": "output.vhd"}})
-    config_file = Path("test/config.cson")
-    with config_file.open("w") as f:
-        f.write(config)
+    yaml = YAML()
+    config_file = Path("test/config.yaml")
+    yaml.dump({"vhdl": {"output_path": str(tmpdir)}}, config_file)
 
     # Test CLI
     runner = CliRunner()
-    result = runner.invoke(cli.regmap, ['test/test.json', 'test/test.cson', str(config_file)])
+    result = runner.invoke(cli.regmap, ['test/test1.yaml', 'test/test2.yaml', str(config_file)])
     assert result.exit_code == 0
 
     # Assert output files exist

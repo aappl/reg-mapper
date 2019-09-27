@@ -1,5 +1,0 @@
-codecov
-pytest
-pytest-cov
-cson
-click

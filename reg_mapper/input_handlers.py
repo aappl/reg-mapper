@@ -4,43 +4,25 @@ be passed to the RegMapper class.
 """
 
 from pathlib import Path
-import json
+
+from ruamel.yaml import YAML
 
 
-import cson
-
-input_handlers = []
+YAML_EXTS = [".yaml", ".yml"]
 
 
-def json_handler(file_path):
+def yaml_handler(file_path):
     """
-    Handles json file inputs. Takes Path object pointing to json file and returns
-    a python dictionary with the json files contents
+    Handles YAML file inputs. Takes Path object pointing to YAML file and returns
+    a python dictionary with the YAML files contents
     """
-    if file_path.suffix == '.json':
-        with open(file_path, "r") as read_file:
-            data = json.load(read_file)
+    if file_path.suffix in YAML_EXTS:
+        with file_path.open("r") as read_file:
+            yaml = YAML()
+            data = yaml.load(read_file)
             return data
-
-
-input_handlers.append(json_handler)
-
-
-def cson_handler(file_path):
-    """
-    Handles cson file inputs. Takes Path object pointing to cson file and returns
-    a python dictionary with the cson files contents
-    """
-    if file_path.suffix == '.cson':
-        with open(file_path, "r") as read_file:
-            data = cson.load(read_file)
-            return data
-
     else:
-        return None
-
-
-input_handlers.append(cson_handler)
+        raise Exception("File extension not recognised: " + file_path.suffix)
 
 
 def get_dicts(input_files):
@@ -49,9 +31,8 @@ def get_dicts(input_files):
     """
     input_dicts = []
     for f in input_files:
-        for handler in input_handlers:
-            input_dict = handler(Path(f))
-            if input_dict:
-                input_dicts.append(input_dict)
+        input_dict = yaml_handler(Path(f))
+        if input_dict:
+            input_dicts.append(input_dict)
 
     return input_dicts

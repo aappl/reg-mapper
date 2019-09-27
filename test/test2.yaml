@@ -1,0 +1,20 @@
+
+# Create list of register maps
+register_maps :
+  # First map
+  map2 :
+    width : 32
+    base_address : 0x0
+    # Declare registers in map
+    registers :
+      # First register
+      register1 :
+        description : "The first register."
+        RW : "READ_ONLY"
+        # Declare bits in register
+        bit_maps :
+          # First bit
+          bit1 :
+            description : "The first bit."
+            start_bit : 0
+            width : 3

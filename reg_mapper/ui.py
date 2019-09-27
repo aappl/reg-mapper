@@ -2,11 +2,7 @@
 This is this top level user interface for the reg_mapper project.
 """
 
-
 from pathlib import Path
-import json
-
-import cson
 
 from reg_mapper import register_classes
 
