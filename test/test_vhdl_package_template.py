@@ -85,4 +85,4 @@ package test_package is
 end package;
 """
 
-    assert vhdl_template.render(map_name=register_map.name, register_map=register_map) == expected.replace('\n', '\r\n')
+    assert vhdl_template.render(map_name=register_map.name, register_map=register_map).replace('\r\n', '\n') == expected.replace('\r\n', '\n')
