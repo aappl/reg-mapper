@@ -1,0 +1,11 @@
+register_maps:
+  - ./test_map_1.yaml
+  - ./test_map_2.yaml
+
+output_generators:
+  - vhdl_package
+  - c_header
+
+output_paths:
+  default: ./default_outputs
+  c_header: ./c_outputs/
